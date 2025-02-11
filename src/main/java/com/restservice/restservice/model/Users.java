@@ -1,4 +1,4 @@
-package com.restservice.restservice;
+package com.restservice.restservice.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

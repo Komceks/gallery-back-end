@@ -1,5 +1,7 @@
-package com.restservice.restservice;
+package com.restservice.restservice.app;
 
+import com.restservice.restservice.bl.UsersService;
+import com.restservice.restservice.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

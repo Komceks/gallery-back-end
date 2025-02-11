@@ -1,16 +1,17 @@
-package com.restservice.restservice;
+package com.restservice.restservice.bl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.restservice.restservice.model.Users;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UsersService {
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
 
     public List<Users> getAllUsers() {
         return usersRepository.findAll();
