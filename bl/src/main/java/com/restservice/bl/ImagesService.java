@@ -1,8 +1,9 @@
 package com.restservice.bl;
 
 import com.restservice.model.Images;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 public class ImagesService {
 
