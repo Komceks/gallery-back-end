@@ -2,29 +2,32 @@ DROP TABLE IMAGE;
 DROP TABLE TAG;
 DROP TABLE IMAGES_TAGS;
 
-CREATE TABLE image (
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    image bytea,
-    name text,
-    description text,
-    date_ date,
-    author text
+CREATE TABLE IMAGE
+(
+    ID          INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    IMAGE       BYTEA,
+    NAME        text,
+    DESCRIPTION text,
+    DATE_       date,
+    AUTHOR      text
 );
-CREATE TABLE tag (
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    name text
+CREATE TABLE TAG
+(
+    ID   INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    NAME text
 );
-CREATE TABLE images_tags (
-    image_id INT NOT NULL,
-    tag_id INT NOT NULL,
-    PRIMARY KEY (image_id, tag_id),
+CREATE TABLE IMAGES_TAGS
+(
+    IMAGE_ID INT NOT NULL,
+    TAG_ID   INT NOT NULL,
+    PRIMARY KEY (IMAGE_ID, TAG_ID),
 
-    CONSTRAINT fk_image
-    FOREIGN KEY (IMAGE_ID)
-    REFERENCES IMAGE(ID) on delete cascade,
+    CONSTRAINT FK_IMAGE
+        FOREIGN KEY (IMAGE_ID)
+            REFERENCES IMAGE (ID) on delete cascade,
 
-    CONSTRAINT fk_tag
-    FOREIGN KEY (TAG_ID)
-    REFERENCES TAG(ID) on delete cascade
+    CONSTRAINT FK_TAG
+        FOREIGN KEY (TAG_ID)
+            REFERENCES TAG (ID) on delete cascade
 );
 
