@@ -1,6 +1,8 @@
 package lt.restservice.bl;
 
+import lt.restservice.model.Image;
 import lt.restservice.model.Tag;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -13,7 +15,7 @@ public class TagService {
     private final TagRepository tagRepository;
 
     @Transactional
-    public Tag findOrCreateTag(String name) {
+    public Tag findOrCreateTag(String name, Image image) {
 
         if (name == null || name.trim().isEmpty()) {
 
@@ -25,6 +27,8 @@ public class TagService {
             Tag newTag = new Tag(name);
 
             try {
+
+                newTag.getImages().add(image);
                 return tagRepository.save(newTag);
 
             } catch (Exception e) {

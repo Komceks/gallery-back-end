@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 // Tells Spring that this code describes an available endpoint
 @RestController
+@RequestMapping("greeting")
 public class GreetingController {
 
     private static final String TEMPLATE = "Hello, %s!";
@@ -18,7 +19,7 @@ public class GreetingController {
     private final AtomicLong counter = new AtomicLong();
 
     // Tell Spring to use greeting method to answer requests sent to localhost/greeting
-    @GetMapping("/greeting")
+    @GetMapping
     // ReqParam tells Spring it expects param name and uses default value if its not there
     public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
         return new Greeting(counter.incrementAndGet(), String.format(TEMPLATE, name), TIMESTAMP);

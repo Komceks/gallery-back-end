@@ -1,21 +1,14 @@
 package lt.restservice.model;
 
-import java.sql.Date;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import org.hibernate.proxy.HibernateProxy;
 
+import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import lombok.Getter;
@@ -24,42 +17,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "image")
+@Table(name = "author")
 @Getter
 @Setter
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
-public class Image {
+public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "image_blob", nullable = false)
-    private final byte[] imageBlob;
-
-    @Column(name = "name", nullable = false)
+    @Column(name = "author_name", nullable = false)
     private final String name;
-
-    @Column(name = "description", nullable = false)
-    private final String description;
-
-    @Column(name = "date", nullable = false)
-    private final Date date;
-
-    // Owning side
-    @ManyToOne
-    @JoinColumn(name = "author_id", nullable = false)
-    private final Author author;
-
-    // Owning side
-    @ManyToMany
-    @JoinTable(
-            name = "images_tags",
-            joinColumns = @JoinColumn(name = "image_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags = new HashSet<>();
 
     // https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
     @Override
@@ -81,8 +51,8 @@ public class Image {
         }
         // Cast 'o' to Author object
         // Ensure that 'this' has an id and compare it to the id of the other object 'author'
-        Image image = (Image) o;
-        return getId() != null && Objects.equals(getId(), image.getId());
+        Author author = (Author) o;
+        return getId() != null && Objects.equals(getId(), author.getId());
     }
 
     @Override
@@ -93,5 +63,4 @@ public class Image {
                 ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
                 : getClass().hashCode();
     }
-
 }
