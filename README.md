@@ -1,10 +1,35 @@
+# Greetings Module (MR1)
+
+Spring Boot "Hello, World!" app
+
+## API documentation
+
+### GET /greeting
+
+- **Description:**
+  Returns a greeting message
+- **Parameters:**
+
+  - **name** (query parameter, optional): the name of the person to greet.
+- **Response:**
+
+```
+200: 
+
+{
+	"id": 1,
+	"content": "Hello, Bob!",
+	"timestamp": "1739803179852"
+}
+```
+
 # Image Upload Module (MR2)
 
 Adds functionality to upload images along with metadata to a PostgreSQL DB.
 
 ## API documentation
 
-### POST /images/upload
+### POST /gallery/upload
 
 - **Description:**
 Upload image along with metadata
@@ -12,12 +37,12 @@ Upload image along with metadata
 
 ```json
 {
-    "name": "Simple image",
+    "imageName": "Simple image",
     "description": "Simple image description",
-    "author": "Joe Foe",
+    "authorName": "Joe Foe",
     "date": "2025-02-18",
-    "tags": ["tag1", "tag2"],
-    "file": <binary_data>
+    "imageFile": <binary_data>,
+    "tags": ["tag1", "tag2"]
 }
 ```
 - **Response:**
@@ -32,7 +57,7 @@ Upload image along with metadata
 	"timestamp": "2025-02-18T13:13:08.093+00:00",
 	"status": 400,
 	"error": "Bad Request",
-	"path": "/images/upload"
+	"path": "/gallery/upload"
 }
 ```
 
