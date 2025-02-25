@@ -9,9 +9,6 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Slf4j
 @Service
@@ -19,16 +16,14 @@ import java.io.IOException;
 public class ImageService {
 
     private final ImageRepository imageRepository;
-    private final TagService tagService;
-    private final AuthorService authorService;
 
     @Transactional
-    public void uploadImage(ImageUploadDto dto, MultipartFile multipartFile) throws IOException {
+    public void uploadImage(ImageCreateReq imageReq) {
         try {
 
-            log.debug("Uploading image {}", dto);
-
-            Image image = ImageUploadMapper.toImage(dto, multipartFile, authorService, tagService);
+            Image image = new Image(imageReq.getImageFile(), imageReq.getImageName(), imageReq.getDescription(),
+                    imageReq.getDate(), imageReq.getAuthor(), imageReq.getTags(),
+                    imageReq.getUploadDate(), imageReq.getThumbnail());
 
             log.debug("Saving image: {}", image);
 

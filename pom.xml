@@ -26,6 +26,7 @@
     <flywaydb.version>11.3.1</flywaydb.version>
     <lombok.version>1.18.36</lombok.version>
     <apache-commons.version>4.4</apache-commons.version>
+    <imgscalr.version>4.2</imgscalr.version>
   </properties>
 
   <modules>
@@ -66,6 +67,11 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-collections4</artifactId>
         <version>${apache-commons.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.imgscalr</groupId>
+        <artifactId>imgscalr-lib</artifactId>
+        <version>${imgscalr.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

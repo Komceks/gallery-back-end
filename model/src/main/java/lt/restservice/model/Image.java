@@ -65,6 +65,9 @@ public class Image {
     @Column(name = "timestamp", nullable = false)
     private final Timestamp uploadDate;
 
+    @Column(name = "thumbnail", nullable = false)
+    private final byte[] thumbnail;
+
     // https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
     @Override
     public final boolean equals(Object o) {
