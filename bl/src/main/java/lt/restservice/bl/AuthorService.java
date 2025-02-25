@@ -21,19 +21,7 @@ public class AuthorService {
             throw new IllegalArgumentException("Author name must not be null or empty.");
         }
 
-        return authorRepository.findByName(name).orElseGet(() -> {
-
-            Author newAuthor = new Author(name);
-
-            try {
-
-                return authorRepository.save(newAuthor);
-
-            } catch (Exception e) {
-
-                throw new IllegalStateException("Failed to save new Author: " + name, e);
-            }
-        });
+        return authorRepository.findByName(name).orElseGet(() -> new Author(name));
     }
 
 }

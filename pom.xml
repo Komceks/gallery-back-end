@@ -25,6 +25,7 @@
     <spring-jpa.version>3.4.2</spring-jpa.version>
     <flywaydb.version>11.3.1</flywaydb.version>
     <lombok.version>1.18.36</lombok.version>
+    <apache-commons.version>4.4</apache-commons.version>
   </properties>
 
   <modules>
@@ -60,6 +61,11 @@
         <artifactId>postgresql</artifactId>
         <version>${psql.version}</version>
         <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-collections4</artifactId>
+        <version>${apache-commons.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

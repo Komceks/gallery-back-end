@@ -1,8 +1,6 @@
 package lt.restservice.bl;
 
-import lt.restservice.model.Author;
 import lt.restservice.model.Image;
-import lt.restservice.model.Tag;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +9,9 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,29 +23,15 @@ public class ImageService {
     private final AuthorService authorService;
 
     @Transactional
-    public void uploadImage(ImageUploadDto dto) throws IOException {
+    public void uploadImage(ImageUploadDto dto, MultipartFile multipartFile) throws IOException {
         try {
 
-            Author author = authorService.findOrCreateAuthor(dto.getAuthorName());
+            log.debug("Uploading image {}", dto);
 
-            Image image = ImageUploadMapper.toImage(dto, author);
+            Image image = ImageUploadMapper.toImage(dto, multipartFile, authorService, tagService);
 
-            Set<Tag> tags = new HashSet<>();
+            log.debug("Saving image: {}", image);
 
-            if (!dto.getTags().isEmpty()) {
-
-                for (String tagName : dto.getTags()) {
-
-                    Tag tag = tagService.findOrCreateTag(tagName, image);
-                    tags.add(tag);
-
-                    log.debug("Tag created: {}", tag.getName());
-                }
-
-                image.getTags().addAll(tags);
-            }
-
-            log.debug("Saving image: {}", image.getName());
             imageRepository.save(image);
 
         } catch (ConstraintViolationException ex) {

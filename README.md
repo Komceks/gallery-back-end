@@ -41,8 +41,9 @@ Upload image along with metadata
     "description": "Simple image description",
     "authorName": "Joe Foe",
     "date": "2025-02-18",
-    "imageFile": <binary_data>,
-    "tags": ["tag1", "tag2"]
+    "imageFile": "<binary_data>",
+    "tags": ["tag1", "tag2"],
+    "uploadDate": "YYYY-MM-DD HH:mm:ss"
 }
 ```
 - **Response:**

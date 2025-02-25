@@ -1,12 +1,13 @@
 package lt.restservice.model;
 
 import java.sql.Date;
-import java.util.HashSet;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 
 import org.hibernate.proxy.HibernateProxy;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -48,18 +49,21 @@ public class Image {
     private final Date date;
 
     // Owning side
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "author_id", nullable = false)
     private final Author author;
 
     // Owning side
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "images_tags",
             joinColumns = @JoinColumn(name = "image_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private Set<Tag> tags = new HashSet<>();
+    private final Set<Tag> tags;
+
+    @Column(name = "timestamp", nullable = false)
+    private final Timestamp uploadDate;
 
     // https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
     @Override
