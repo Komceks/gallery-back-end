@@ -22,13 +22,11 @@ import lt.restservice.model.Tag;
 public class ThumbnailRetriveMapper {
 
     private final ImageService imageService;
-    private final AuthorService authorService;
-    private final TagService tagService;
 
     @Transactional
-    public List<ThumbnailRetrieveDto> toThumbnailRetrieveDto() throws IOException {
+    public List<ThumbnailRetrieveDto> toThumbnailRetrieveDto(int startIdx, int endIdx) {
 
-        return imageService.getAllImageRequests().stream().map(imageCreateReq ->
+        return imageService.getImageRequestBatch(startIdx, endIdx).stream().map(imageCreateReq ->
                 new ThumbnailRetrieveDto(
                         imageCreateReq.getImageName(),
                         imageCreateReq.getDescription(),

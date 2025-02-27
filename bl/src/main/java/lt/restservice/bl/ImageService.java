@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +45,8 @@ public class ImageService {
     }
 
     @Transactional
-    public List<ImageCreateReq> getAllImageRequests() {
-        return imageRepository.findAll().stream().map(
+    public List<ImageCreateReq> getImageRequestBatch(int startIdx, int endIdx) {
+        return imageRepository.findAll(PageRequest.of(startIdx, endIdx)).stream().map(
                 image -> new ImageCreateReq(
                         image.getImageBlob(),
                         image.getName(),

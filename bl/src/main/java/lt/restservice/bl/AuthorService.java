@@ -1,5 +1,6 @@
 package lt.restservice.bl;
 
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 
 import lt.restservice.model.Author;
@@ -16,7 +17,7 @@ public class AuthorService {
     @Transactional
     public Author findOrCreateAuthor(String name) {
 
-        if (name == null || name.trim().isEmpty()) {
+        if (StringUtils.isBlank(name)) {
 
             throw new IllegalArgumentException("Author name must not be null or empty.");
         }

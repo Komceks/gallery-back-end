@@ -37,8 +37,9 @@ public class GalleryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ThumbnailRetrieveDto>> getAllImages() throws IOException {
-        List<ThumbnailRetrieveDto> thumbnailRetrieveDtos = thumbnailRetriveMapper.toThumbnailRetrieveDto();
+    public ResponseEntity<List<ThumbnailRetrieveDto>> getImageBatch(@RequestParam(value = "startIdx") int startIdx,
+            @RequestParam(value = "endIdx") int endIdx) {
+        List<ThumbnailRetrieveDto> thumbnailRetrieveDtos = thumbnailRetriveMapper.toThumbnailRetrieveDto(startIdx, endIdx);
         return ResponseEntity.ok(thumbnailRetrieveDtos);
     }
 }
