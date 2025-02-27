@@ -1,5 +1,7 @@
 package lt.restservice.bl;
 
+import java.util.List;
+
 import lt.restservice.model.Image;
 
 import lombok.extern.slf4j.Slf4j;
@@ -39,5 +41,20 @@ public class ImageService {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    @Transactional
+    public List<ImageCreateReq> getAllImageRequests() {
+        return imageRepository.findAll().stream().map(
+                image -> new ImageCreateReq(
+                        image.getImageBlob(),
+                        image.getName(),
+                        image.getDescription(),
+                        image.getDate(),
+                        image.getAuthor(),
+                        image.getTags(),
+                        image.getUploadDate(),
+                        image.getThumbnail())
+        ).toList();
     }
 }
