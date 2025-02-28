@@ -1,5 +1,10 @@
 package lt.restservice.bl;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import lt.restservice.model.Tag;
 
 import lombok.RequiredArgsConstructor;
@@ -14,13 +19,20 @@ public class TagService {
     private final TagRepository tagRepository;
 
     @Transactional
-    public Tag findOrCreateTag(String name) {
+    public Set<Tag> findOrCreateTags(Set<String> tagNames) {
 
-        if (name == null || name.trim().isEmpty()) {
+        Set<Tag> existingTags = new HashSet<>(tagRepository.findByNameIn(tagNames));
 
-            throw new IllegalArgumentException("Tag name must not be null or empty.");
-        }
+        Set<String> existingTagNames = existingTags.stream().map(Tag::getName).collect(Collectors.toSet());
 
-        return tagRepository.findByName(name).orElseGet(() -> new Tag(name));
+        Set<String> missingTagNames = new HashSet<>(tagNames);
+        missingTagNames.removeAll(existingTagNames);
+
+        List<Tag> newTags = missingTagNames.stream().map(Tag::new).toList();
+
+        Set<Tag> allTags = new HashSet<>(existingTags);
+        allTags.addAll(newTags);
+
+        return allTags;
     }
 }

@@ -19,7 +19,7 @@ public class ThumbnailGenerator {
         ByteArrayInputStream bais = new ByteArrayInputStream(file);
         BufferedImage bufferedImage = ImageIO.read(bais);
 
-        int targetWidth = 300;
+        final int targetWidth = 300;
 
         BufferedImage thumbnail = Scalr.resize(bufferedImage, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, targetWidth);
 

@@ -5,8 +5,6 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 
-import org.hibernate.proxy.HibernateProxy;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -68,37 +66,30 @@ public class Image {
     @Column(name = "thumbnail", nullable = false)
     private final byte[] thumbnail;
 
-    // https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
     @Override
-    public final boolean equals(Object o) {
-        // Check if 'this' the same as 'o'
-        if (this == o) {
-            return true;
-        }
-        // Check if 'o' is null
-        if (o == null) {
-            return false;
-        }
-        // Check if the class of 'o' is the same as the class of 'this',
-        // If 'o' or 'this' is a Hibernate proxy, retrieve its actual persistent class (the one it proxies).
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) {
-            return false;
-        }
-        // Cast 'o' to Author object
-        // Ensure that 'this' has an id and compare it to the id of the other object 'author'
-        Image image = (Image) o;
-        return getId() != null && Objects.equals(getId(), image.getId());
+    public int hashCode() {
+        return id == null ? 0 : Objects.hashCode(id);
     }
 
     @Override
-    public final int hashCode() {
-        // Check if its Hibernate proxy, return hashCode of persistent class the proxy represents,
-        // Otherwise simply return hashCode of the class of the object.
-        return this instanceof HibernateProxy
-                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
-                : getClass().hashCode();
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Image other = (Image) obj;
+
+        if (id == null || other.id == null) {
+            return false;
+        }
+
+        return Objects.equals(id, other.getId());
     }
 
 }
