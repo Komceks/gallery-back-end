@@ -1,6 +1,7 @@
 package lt.restservice.bl;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Set;
 
 import lt.restservice.model.Tag;
 
@@ -10,5 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
-    Optional<Tag> findByName(String name);
+    Set<Tag> findByNameIn(Collection<String> names);
 }

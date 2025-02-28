@@ -5,20 +5,21 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lt.restservice.model.Author;
-import lt.restservice.model.Tag;
 
 @Data
 @AllArgsConstructor
-public class ImageCreateReq {
+@Builder
+public class CreateImageModel {
 
     private final byte[] imageFile;
     private final String imageName;
     private final String description;
     private final Date date;
-    private final Author author;
-    private final Set<Tag> tags;
+    private final String authorName;
+    private final Set<String> tagNames;
     private final Timestamp uploadDate;
     private final byte[] thumbnail;
+
 }

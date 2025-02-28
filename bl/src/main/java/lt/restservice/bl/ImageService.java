@@ -1,11 +1,13 @@
 package lt.restservice.bl;
 
-import java.util.List;
+import java.util.Set;
 
+import lt.restservice.model.Author;
 import lt.restservice.model.Image;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
+import lt.restservice.model.Tag;
 
 import org.hibernate.exception.ConstraintViolationException;
 
@@ -19,14 +21,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class ImageService {
 
     private final ImageRepository imageRepository;
+    private final TagService tagService;
+    private final AuthorService authorService;
 
     @Transactional
-    public void uploadImage(ImageCreateReq imageReq) {
+    public void uploadImage(CreateImageModel imageModel) {
         try {
 
-            Image image = new Image(imageReq.getImageFile(), imageReq.getImageName(), imageReq.getDescription(),
-                    imageReq.getDate(), imageReq.getAuthor(), imageReq.getTags(),
-                    imageReq.getUploadDate(), imageReq.getThumbnail());
+            Set<Tag> tagSet = tagService.findOrCreateTags(imageModel.getTagNames());
+
+            Author author = authorService.findOrCreateAuthor(imageModel.getAuthorName());
+
+            Image image = new Image(imageModel.getImageFile(), imageModel.getImageName(), imageModel.getDescription(),
+                    imageModel.getDate(), author, tagSet, imageModel.getUploadDate(), imageModel.getThumbnail());
 
             log.debug("Saving image: {}", image);
 
