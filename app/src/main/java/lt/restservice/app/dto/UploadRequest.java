@@ -1,7 +1,6 @@
 package lt.restservice.app.dto;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +18,5 @@ public class UploadRequest {
     private final String authorName;
     private final Date date;
     private final Set<String> tags;
-    private final Timestamp uploadDate;
 
 }

@@ -1,6 +1,8 @@
 package lt.restservice.app.mappers;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,8 @@ public class UploadRequestMapper {
 
         byte[] thumbnail = ThumbnailGenerator.createThumbnail(multipartFile.getBytes());
 
+        Timestamp uploadDate = java.sql.Timestamp.valueOf(LocalDateTime.now());
+
         CreateImageModel imageModel = CreateImageModel.builder()
                 .imageFile(multipartFile.getBytes())
                 .imageName(dto.getImageName())
@@ -33,7 +37,7 @@ public class UploadRequestMapper {
                 .date(dto.getDate())
                 .authorName(dto.getAuthorName())
                 .tagNames(dto.getTags())
-                .uploadDate(dto.getUploadDate())
+                .uploadDate(uploadDate)
                 .thumbnail(thumbnail)
                 .build();
 
