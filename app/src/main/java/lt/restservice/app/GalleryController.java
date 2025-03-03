@@ -24,8 +24,7 @@ public class GalleryController {
     public ResponseEntity<String> uploadImage(@RequestPart("dto") UploadRequest dto,
             @RequestPart("imageFile") MultipartFile multipartFile) throws IOException {
 
-        log.debug("new dto: {} {} {}", dto.getImageName(), dto.getAuthorName(),
-                dto.getUploadDate());
+        log.debug("new dto: {} {}", dto.getImageName(), dto.getAuthorName());
 
         uploadRequestMapper.upload(dto, multipartFile);
 

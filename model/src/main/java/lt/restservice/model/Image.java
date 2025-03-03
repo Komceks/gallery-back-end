@@ -2,7 +2,6 @@ package lt.restservice.model;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -65,31 +64,5 @@ public class Image {
 
     @Column(name = "thumbnail", nullable = false)
     private final byte[] thumbnail;
-
-    @Override
-    public int hashCode() {
-        return id == null ? 0 : Objects.hashCode(id);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-
-        Image other = (Image) obj;
-
-        if (id == null || other.id == null) {
-            return false;
-        }
-
-        return Objects.equals(id, other.getId());
-    }
 
 }
