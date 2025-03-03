@@ -1,6 +1,8 @@
 package lt.restservice.bl;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import lt.restservice.model.Author;
 import lt.restservice.model.Image;
@@ -52,15 +54,15 @@ public class ImageService {
     }
 
     @Transactional
-    public List<ImageCreateReq> getImageRequestBatch(int startIdx, int endIdx) {
+    public List<CreateImageModel> getImageRequestBatch(int startIdx, int endIdx) {
         return imageRepository.findAll(PageRequest.of(startIdx, endIdx)).stream().map(
-                image -> new ImageCreateReq(
+                image -> new CreateImageModel(
                         image.getImageBlob(),
                         image.getName(),
                         image.getDescription(),
                         image.getDate(),
-                        image.getAuthor(),
-                        image.getTags(),
+                        image.getAuthor().getName(),
+                        image.getTags().stream().map(Tag::getName).collect(Collectors.toSet()),
                         image.getUploadDate(),
                         image.getThumbnail())
         ).toList();

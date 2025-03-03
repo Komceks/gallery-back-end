@@ -3,6 +3,7 @@ package lt.restservice.app;
 import java.io.IOException;
 import java.util.List;
 
+import lt.restservice.app.dto.ThumbnailRetrieveDto;
 import lt.restservice.app.mappers.UploadRequestMapper;
 import lt.restservice.app.dto.UploadRequest;
 
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class GalleryController {
 
     private final UploadRequestMapper uploadRequestMapper;
+    private final ThumbnailRetriveMapper thumbnailRetriveMapper;
 
     @PostMapping(value = "/upload")
     public ResponseEntity<String> uploadImage(@RequestPart("dto") UploadRequest dto,
@@ -37,7 +39,9 @@ public class GalleryController {
     @GetMapping
     public ResponseEntity<List<ThumbnailRetrieveDto>> getImageBatch(@RequestParam(value = "startIdx") int startIdx,
             @RequestParam(value = "endIdx") int endIdx) {
+
         List<ThumbnailRetrieveDto> thumbnailRetrieveDtos = thumbnailRetriveMapper.toThumbnailRetrieveDto(startIdx, endIdx);
+
         return ResponseEntity.ok(thumbnailRetrieveDtos);
     }
 }
