@@ -13,6 +13,7 @@ import lombok.Data;
 @Builder
 public class CreateImageModel {
 
+    private final Long id;
     private final byte[] imageFile;
     private final String imageName;
     private final String description;

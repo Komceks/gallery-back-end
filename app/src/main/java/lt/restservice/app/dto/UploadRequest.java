@@ -8,9 +8,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-// At this point its uploadRequest,
-// since its just the upload requests from front-end,
-// with MR3 it might change back to ImageDto
 public class UploadRequest {
 
     private final String imageName;

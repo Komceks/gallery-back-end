@@ -5,12 +5,15 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ThumbnailRetrieveDto {
+@Builder
+public class GalleryThumbnailDataResponse {
 
+    private final Long id;
     private final String imageName;
     private final String description;
     private final String authorName;

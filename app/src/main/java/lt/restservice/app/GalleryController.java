@@ -3,13 +3,14 @@ package lt.restservice.app;
 import java.io.IOException;
 import java.util.List;
 
-import lt.restservice.app.dto.ThumbnailRetrieveDto;
-import lt.restservice.app.mappers.UploadRequestMapper;
+import lt.restservice.app.dto.GalleryThumbnailDataResponse;
 import lt.restservice.app.dto.UploadRequest;
+
+import lt.restservice.app.mappers.UploadRequestMapper;
+import lt.restservice.app.mappers.GalleryThumbnailDataResponseMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lt.restservice.app.mappers.ThumbnailRetriveMapper;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class GalleryController {
 
     private final UploadRequestMapper uploadRequestMapper;
-    private final ThumbnailRetriveMapper thumbnailRetriveMapper;
+    private final GalleryThumbnailDataResponseMapper galleryThumbnailDataResponseMapper;
 
     @PostMapping(value = "/upload")
     public ResponseEntity<String> uploadImage(@RequestPart("dto") UploadRequest dto,
@@ -36,11 +37,25 @@ public class GalleryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ThumbnailRetrieveDto>> getImageBatch(@RequestParam(value = "startIdx") int startIdx,
+    public ResponseEntity<List<GalleryThumbnailDataResponse>> getImageBatch(
+            @RequestParam(value = "startIdx") int startIdx,
             @RequestParam(value = "endIdx") int endIdx) {
 
-        List<ThumbnailRetrieveDto> thumbnailRetrieveDtos = thumbnailRetriveMapper.toThumbnailRetrieveDto(startIdx, endIdx);
+        List<GalleryThumbnailDataResponse> GalleryThumbnailDataResponse =
+                galleryThumbnailDataResponseMapper.toGalleryThumbnailDataResponse(startIdx, endIdx);
 
-        return ResponseEntity.ok(thumbnailRetrieveDtos);
+        return ResponseEntity.ok(GalleryThumbnailDataResponse);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<GalleryThumbnailDataResponse>> search(
+            @RequestParam(value = "startIdx") int startIdx,
+            @RequestParam(value = "endIdx") int endIdx,
+            @RequestParam(value = "search") String query) {
+
+        List<GalleryThumbnailDataResponse> GalleryThumbnailDataResponse =
+                galleryThumbnailDataResponseMapper.toGalleryThumbnailDataResponse(startIdx, endIdx, query);
+
+        return ResponseEntity.ok(GalleryThumbnailDataResponse);
     }
 }

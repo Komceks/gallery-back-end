@@ -56,15 +56,34 @@ public class ImageService {
     @Transactional
     public List<CreateImageModel> getImageRequestBatch(int startIdx, int endIdx) {
         return imageRepository.findAll(PageRequest.of(startIdx, endIdx)).stream().map(
-                image -> new CreateImageModel(
-                        image.getImageBlob(),
-                        image.getName(),
-                        image.getDescription(),
-                        image.getDate(),
-                        image.getAuthor().getName(),
-                        image.getTags().stream().map(Tag::getName).collect(Collectors.toSet()),
-                        image.getUploadDate(),
-                        image.getThumbnail())
+                image -> CreateImageModel.builder()
+                        .id(image.getId())
+                        .imageFile(image.getImageBlob())
+                        .imageName(image.getName())
+                        .description(image.getDescription())
+                        .date(image.getDate())
+                        .authorName(image.getAuthor().getName())
+                        .tagNames(image.getTags().stream().map(Tag::getName).collect(Collectors.toSet()))
+                        .uploadDate(image.getUploadDate())
+                        .thumbnail(image.getThumbnail())
+                        .build()
+        ).toList();
+    }
+
+    @Transactional
+    public List<CreateImageModel> getImageRequestBatch(int startIdx, int endIdx, String query) {
+        return imageRepository.searchImages(startIdx, endIdx, query).stream().map(
+                image -> CreateImageModel.builder()
+                        .id(image.getId())
+                        .imageFile(image.getImageBlob())
+                        .imageName(image.getName())
+                        .description(image.getDescription())
+                        .date(image.getDate())
+                        .authorName(image.getAuthor().getName())
+                        .tagNames(image.getTags().stream().map(Tag::getName).collect(Collectors.toSet()))
+                        .uploadDate(image.getUploadDate())
+                        .thumbnail(image.getThumbnail())
+                        .build()
         ).toList();
     }
 }
