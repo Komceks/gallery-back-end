@@ -23,8 +23,6 @@ Spring Boot "Hello, World!" app
 }
 ```
 
-<a href="https://ibb.co/bgny6NY1"><img src="https://i.ibb.co/d0y3fkXB/mr1insoft.png" alt="mr1insoft" border="0"></a>
-
 # Image Upload Module (MR2)
 
 Adds functionality to upload images along with metadata to a PostgreSQL DB.
@@ -73,7 +71,6 @@ Upload image along with metadata
 - Incorporate image compression or resizing.
 - Add proper response
 
-<a href="https://ibb.co/ghBP2NC"><img src="https://i.ibb.co/XMv3Q1T/mr2insoft.png" alt="mr2insoft" border="0"></a>
 
 # Image Upload Module (MR3)
 
@@ -121,7 +118,6 @@ Masonry layout gallery page with implemented simple searching functionality usin
 	"path": "/gallery"
 }
 ```
-<a href="https://ibb.co/C3RNh8FK"><img src="https://i.ibb.co/gLkHz9CZ/mr3-2insoft.png" alt="mr3-2insoft" border="0"></a>
 
 ### GET /api/gallery/search
 
@@ -164,5 +160,3 @@ Masonry layout gallery page with implemented simple searching functionality usin
 	"path": "/gallery/search"
 }
 ```
-
-<a href="https://ibb.co/ymr9Zk8Y"><img src="https://i.ibb.co/xKNkBgMf/mr3insoft.png" alt="mr3insoft" border="0"></a>
