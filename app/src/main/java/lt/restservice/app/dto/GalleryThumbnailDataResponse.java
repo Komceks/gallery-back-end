@@ -2,6 +2,7 @@ package lt.restservice.app.dto;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class GalleryThumbnailDataResponse {
     private final String authorName;
     private final Date date;
     private final Set<String> tags;
-    private final Timestamp uploadDate;
+    private final LocalDateTime uploadDate;
     private final byte[] thumbnail;
 
 }
