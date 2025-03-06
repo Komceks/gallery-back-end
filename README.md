@@ -51,8 +51,6 @@ Upload image along with metadata
 ```
 200: 
 
-"Image uploaded successfully"
-
 400:
 {
 	"timestamp": "2025-02-18T13:13:08.093+00:00",
