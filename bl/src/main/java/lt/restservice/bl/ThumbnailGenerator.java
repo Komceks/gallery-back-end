@@ -21,10 +21,13 @@ public class ThumbnailGenerator {
 
         final int targetWidth = 300;
 
+        // every thumbnail has unified format
+        final String thumbnailFormat = "jpg";
+
         BufferedImage thumbnail = Scalr.resize(bufferedImage, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, targetWidth);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(thumbnail, "jpg", baos);
+        ImageIO.write(thumbnail, thumbnailFormat, baos);
 
         return baos.toByteArray();
     }
