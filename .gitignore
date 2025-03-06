@@ -1,6 +1,7 @@
 HELP.md
+target/
 **/target/
-**/db/
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
