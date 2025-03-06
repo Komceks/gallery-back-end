@@ -1,7 +1,7 @@
 package lt.restservice.model;
 
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -18,8 +18,10 @@ import jakarta.persistence.Table;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "image")
@@ -27,6 +29,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
+@Accessors(chain = true)
 public class Image {
 
     @Id
@@ -34,35 +37,41 @@ public class Image {
     private Long id;
 
     @Column(name = "image_blob", nullable = false)
-    private final byte[] imageBlob;
+    private byte @NonNull [] imageBlob;
 
+    @NonNull
     @Column(name = "name", nullable = false)
-    private final String name;
+    private String name;
 
+    @NonNull
     @Column(name = "description", nullable = false)
-    private final String description;
+    private String description;
 
+    @NonNull
     @Column(name = "date", nullable = false)
-    private final Date date;
+    private Date date;
 
     // Owning side
+    @NonNull
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "author_id", nullable = false)
-    private final Author author;
+    private Author author;
 
     // Owning side
+    @NonNull
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "images_tags",
             joinColumns = @JoinColumn(name = "image_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private final Set<Tag> tags;
+    private Set<Tag> tags;
 
+    @NonNull
     @Column(name = "timestamp", nullable = false)
-    private final Timestamp uploadDate;
+    private LocalDateTime uploadDate;
 
     @Column(name = "thumbnail", nullable = false)
-    private final byte[] thumbnail;
+    private byte @NonNull [] thumbnail;
 
 }

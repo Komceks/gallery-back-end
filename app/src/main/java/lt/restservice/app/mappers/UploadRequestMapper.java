@@ -1,7 +1,6 @@
 package lt.restservice.app.mappers;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
@@ -14,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import lt.restservice.app.dto.UploadRequest;
 import lt.restservice.bl.CreateImageModel;
 import lt.restservice.bl.ImageService;
-import lt.restservice.bl.ThumbnailGenerator;
 
 @Slf4j
 @Component
@@ -26,9 +24,7 @@ public class UploadRequestMapper {
     @Transactional
     public void upload(UploadRequest dto, MultipartFile multipartFile) throws IOException {
 
-        byte[] thumbnail = ThumbnailGenerator.createThumbnail(multipartFile.getBytes());
-
-        Timestamp uploadDate = java.sql.Timestamp.valueOf(LocalDateTime.now());
+        LocalDateTime uploadDate = LocalDateTime.now();
 
         CreateImageModel imageModel = CreateImageModel.builder()
                 .imageFile(multipartFile.getBytes())
@@ -38,7 +34,6 @@ public class UploadRequestMapper {
                 .authorName(dto.getAuthorName())
                 .tagNames(dto.getTags())
                 .uploadDate(uploadDate)
-                .thumbnail(thumbnail)
                 .build();
 
         imageService.uploadImage(imageModel);

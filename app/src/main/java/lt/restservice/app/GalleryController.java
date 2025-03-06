@@ -26,14 +26,14 @@ public class GalleryController {
     private final GalleryThumbnailDataResponseMapper galleryThumbnailDataResponseMapper;
 
     @PostMapping(value = "/upload")
-    public ResponseEntity<String> uploadImage(@RequestPart("dto") UploadRequest dto,
+    public ResponseEntity<Void> uploadImage(@RequestPart("dto") UploadRequest dto,
             @RequestPart("imageFile") MultipartFile multipartFile) throws IOException {
 
         log.debug("new dto: {} {}", dto.getImageName(), dto.getAuthorName());
 
         uploadRequestMapper.upload(dto, multipartFile);
 
-        return ResponseEntity.ok("Image uploaded successfully");
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

@@ -1,7 +1,7 @@
 package lt.restservice.bl;
 
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class CreateImageModel {
     private final Date date;
     private final String authorName;
     private final Set<String> tagNames;
-    private final Timestamp uploadDate;
+    private final LocalDateTime uploadDate;
     private final byte[] thumbnail;
 
 }

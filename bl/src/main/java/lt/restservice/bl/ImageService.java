@@ -1,6 +1,6 @@
 package lt.restservice.bl;
 
-import java.util.List;
+import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,15 +27,24 @@ public class ImageService {
     private final AuthorService authorService;
 
     @Transactional
-    public void uploadImage(CreateImageModel imageModel) {
+    public void uploadImage(CreateImageModel imageModel) throws IOException {
         try {
 
             Set<Tag> tagSet = tagService.findOrCreateTags(imageModel.getTagNames());
 
             Author author = authorService.findOrCreateAuthor(imageModel.getAuthorName());
 
-            Image image = new Image(imageModel.getImageFile(), imageModel.getImageName(), imageModel.getDescription(),
-                    imageModel.getDate(), author, tagSet, imageModel.getUploadDate(), imageModel.getThumbnail());
+            byte[] thumbnail = ThumbnailGenerator.createThumbnail(imageModel.getImageFile());
+
+            Image image = new Image();
+            image.setImageBlob(imageModel.getImageFile())
+                    .setName(imageModel.getImageName())
+                    .setDescription(imageModel.getDescription())
+                    .setDate(imageModel.getDate())
+                    .setAuthor(author)
+                    .setTags(tagSet)
+                    .setUploadDate(imageModel.getUploadDate())
+                    .setThumbnail(thumbnail);
 
             log.debug("Saving image: {}", image);
 
@@ -46,10 +55,6 @@ public class ImageService {
             log.error("Constraint violation during image save:");
             throw ex;
 
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            throw e;
         }
     }
 
