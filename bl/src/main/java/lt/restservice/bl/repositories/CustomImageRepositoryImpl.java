@@ -20,6 +20,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -120,12 +121,10 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
             return new Predicate[0];
         }
 
-        List<Predicate> predicates = new ArrayList<>();
-
         Join<Image, Author> author = image.join(Image_.author);
-        Join<Image, Tag> tags = image.join(Image_.tags);
+        Join<Image, Tag> tags = image.join(Image_.tags, JoinType.LEFT);
 
-        String[] tokens = query.toLowerCase().split("\\s+");
+        String[] tokens = query.split("\\s+");
         List<Predicate> allTokenPredicates = new ArrayList<>();
 
         for (String token : tokens) {
@@ -136,6 +135,7 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
             tokenPredicates = addLikePredicate(tokenPredicates, cb, token, author.get(Author_.name));
             tokenPredicates = addLikePredicate(tokenPredicates, cb, token, image.get(Image_.description));
             tokenPredicates = addLikePredicate(tokenPredicates, cb, token, tags.get(Tag_.name));
+            tokenPredicates.add(cb.equal(cb.lower(tags.get(Tag_.name)), token.toLowerCase()));
 
             if (token.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
 
@@ -145,9 +145,7 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
             allTokenPredicates.add(cb.or(tokenPredicates.toArray(new Predicate[0])));
         }
 
-        predicates.add(cb.and(allTokenPredicates.toArray(new Predicate[0])));
-
-        return predicates.toArray(new Predicate[0]);
+        return new Predicate[] {cb.and(allTokenPredicates.toArray(new Predicate[0]))};
     }
 
     @Transactional(readOnly = true)
@@ -172,7 +170,7 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
             predicates.add(tags.get(Tag_.name).in(imageModel.getTagNames()));
         }
 
-        return predicates.isEmpty() ? new Predicate[0] : predicates.toArray(new Predicate[0]);
+        return predicates.isEmpty() ? new Predicate[0] : new Predicate[] {cb.and(predicates.toArray(new Predicate[0]))};
     }
 
     @Transactional(readOnly = true)
@@ -180,7 +178,7 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
 
         if (predicates.length == 0) {
 
-            criteria.getCq().select(criteria.getImage());
+            criteria.getCq().select(criteria.getImage()).distinct(true);
 
             List<Image> imageList = em.createQuery(criteria.getCq()).setFirstResult(pageRequest.getPageNumber() * pageRequest.getPageSize())
                     .setMaxResults(pageRequest.getPageSize()).getResultList();
@@ -190,7 +188,7 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
             return new PageImpl<>(imageList, pageRequest, searchCount);
         }
 
-        criteria.getCq().select(criteria.getImage()).where(criteria.getCb().and(predicates));
+        criteria.getCq().select(criteria.getImage()).distinct(true).where(predicates);
 
         List<Image> imageList = em.createQuery(criteria.getCq()).setFirstResult(pageRequest.getPageNumber() * pageRequest.getPageSize())
                 .setMaxResults(pageRequest.getPageSize()).getResultList();
@@ -237,11 +235,11 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
 
         if (predicates.length == 0) {
 
-            criteria.getCq().select(criteria.getCb().count(criteria.getImage()));
+            criteria.getCq().select(criteria.getCb().countDistinct(criteria.getImage()));
 
         } else {
 
-            criteria.getCq().select(criteria.getCb().count(criteria.getImage())).where(predicates);
+            criteria.getCq().select(criteria.getCb().countDistinct(criteria.getImage())).where(predicates);
         }
 
         return em.createQuery(criteria.getCq()).getSingleResult();
