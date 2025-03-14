@@ -4,11 +4,15 @@ import java.sql.Date;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor(force = true)
 @AllArgsConstructor
-public class UploadRequest {
+@Builder
+public class SearchOrUploadRequest {
 
     private final String imageName;
     private final String description;

@@ -1,8 +1,10 @@
-package lt.restservice.bl;
+package lt.restservice.bl.services;
 
-import io.micrometer.common.util.StringUtils;
+import static io.micrometer.common.util.StringUtils.isBlank;
+
 import lombok.RequiredArgsConstructor;
 
+import lt.restservice.bl.repositories.AuthorRepository;
 import lt.restservice.model.Author;
 
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ public class AuthorService {
     @Transactional
     public Author findOrCreateAuthor(String name) {
 
-        if (StringUtils.isBlank(name)) {
+        if (isBlank(name)) {
 
             throw new IllegalArgumentException("Author name must not be null or empty.");
         }

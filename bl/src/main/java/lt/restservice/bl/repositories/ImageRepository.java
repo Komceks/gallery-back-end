@@ -1,4 +1,4 @@
-package lt.restservice.bl;
+package lt.restservice.bl.repositories;
 
 import lt.restservice.model.Image;
 
@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long>, CustomImageRepository {
+
 }

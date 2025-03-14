@@ -1,20 +1,23 @@
 package lt.restservice.app;
 
 import java.io.IOException;
-import java.util.List;
 
-import lt.restservice.app.dto.GalleryThumbnailDataResponse;
-import lt.restservice.app.dto.UploadRequest;
+import lt.restservice.app.dto.ThumbnailDto;
+import lt.restservice.app.dto.SearchOrUploadRequest;
 
 import lt.restservice.app.mappers.UploadRequestMapper;
-import lt.restservice.app.mappers.GalleryThumbnailDataResponseMapper;
+import lt.restservice.app.mappers.GalleryPageResponseMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Slf4j
 @RestController
@@ -23,13 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class GalleryController {
 
     private final UploadRequestMapper uploadRequestMapper;
-    private final GalleryThumbnailDataResponseMapper galleryThumbnailDataResponseMapper;
+    private final GalleryPageResponseMapper galleryPageResponseMapper;
 
     @PostMapping(value = "/upload")
-    public ResponseEntity<Void> uploadImage(@RequestPart("dto") UploadRequest dto,
+    public ResponseEntity<Void> uploadImage(@RequestPart("dto") SearchOrUploadRequest dto,
             @RequestPart("imageFile") MultipartFile multipartFile) throws IOException {
-
-        log.debug("new dto: {} {}", dto.getImageName(), dto.getAuthorName());
 
         uploadRequestMapper.upload(dto, multipartFile);
 
@@ -37,25 +38,36 @@ public class GalleryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GalleryThumbnailDataResponse>> getImageBatch(
-            @RequestParam(value = "startIdx") int startIdx,
-            @RequestParam(value = "endIdx") int endIdx) {
+    public ResponseEntity<Page<ThumbnailDto>> getImagePage(@RequestParam(value = "page") int page,
+            @RequestParam(value = "size") int size) {
 
-        List<GalleryThumbnailDataResponse> GalleryThumbnailDataResponse =
-                galleryThumbnailDataResponseMapper.toGalleryThumbnailDataResponse(startIdx, endIdx);
+        Page<ThumbnailDto> galleryPageResponse =
+                galleryPageResponseMapper.toGalleryPageResponse(page, size);
 
-        return ResponseEntity.ok(GalleryThumbnailDataResponse);
+        return ResponseEntity.ok(galleryPageResponse);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<GalleryThumbnailDataResponse>> search(
-            @RequestParam(value = "startIdx") int startIdx,
-            @RequestParam(value = "endIdx") int endIdx,
-            @RequestParam(value = "search") String query) {
+    public ResponseEntity<Page<ThumbnailDto>> search(@RequestParam(value = "page") int page,
+            @RequestParam(value = "size") int size,
+            @RequestParam(value = "query") String query) {
 
-        List<GalleryThumbnailDataResponse> GalleryThumbnailDataResponse =
-                galleryThumbnailDataResponseMapper.toGalleryThumbnailDataResponse(startIdx, endIdx, query);
+        Page<ThumbnailDto> galleryPageResponse =
+                galleryPageResponseMapper.toGalleryPageResponse(page, size, query);
 
-        return ResponseEntity.ok(GalleryThumbnailDataResponse);
+        return ResponseEntity.ok(galleryPageResponse);
+    }
+
+    @GetMapping("/advanced_search")
+    public ResponseEntity<Page<ThumbnailDto>> advancedSearch(@RequestParam(value = "page") int page,
+            @RequestParam(value = "size") int size,
+            @RequestParam(value = "dto") String dto) throws JsonProcessingException {
+
+        SearchOrUploadRequest searchRequest = new ObjectMapper().readValue(dto, SearchOrUploadRequest.class);
+
+        Page<ThumbnailDto> galleryPageResponse =
+                galleryPageResponseMapper.toGalleryPageResponse(page, size, searchRequest);
+
+        return ResponseEntity.ok(galleryPageResponse);
     }
 }

@@ -1,19 +1,22 @@
-package lt.restservice.bl;
+package lt.restservice.bl.services;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lt.restservice.bl.models.ImageModel;
+import lt.restservice.bl.utils.ThumbnailGenerator;
+import lt.restservice.bl.repositories.ImageRepository;
 import lt.restservice.model.Author;
 import lt.restservice.model.Image;
+import lt.restservice.model.Tag;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
-import lt.restservice.model.Tag;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +31,7 @@ public class ImageService {
     private final AuthorService authorService;
 
     @Transactional
-    public void uploadImage(CreateImageModel imageModel) throws IOException {
+    public void uploadImage(ImageModel imageModel) throws IOException {
         try {
 
             Set<Tag> tagSet = tagService.findOrCreateTags(imageModel.getTagNames());
@@ -55,41 +58,49 @@ public class ImageService {
 
             log.error("Constraint violation during image save:");
             throw ex;
-
         }
     }
 
     @Transactional
-    public List<CreateImageModel> getImageRequestBatch(int startIdx, int endIdx) {
-        return imageRepository.findAll(PageRequest.of(startIdx, endIdx)).stream().map(
-                image -> CreateImageModel.builder()
-                        .id(image.getId())
-                        .imageFile(image.getImageBlob())
-                        .imageName(image.getName())
-                        .description(image.getDescription())
-                        .date(image.getDate())
-                        .authorName(image.getAuthor().getName())
-                        .tagNames(image.getTags().stream().map(Tag::getName).collect(Collectors.toSet()))
-                        .uploadDate(image.getUploadDate())
-                        .thumbnail(image.getThumbnail())
-                        .build()
-        ).toList();
+    public Page<ImageModel> getImagePage(int page, int size) {
+
+        Page<Image> imagePage = imageRepository.findAll(PageRequest.of(page, size));
+
+        return buildImageModelPage(imagePage);
     }
 
     @Transactional
-    public List<CreateImageModel> getImageRequestBatch(int startIdx, int endIdx, String query) {
-        return imageRepository.searchImages(startIdx, endIdx, query).stream().map(
-                image -> CreateImageModel.builder()
+    public Page<ImageModel> getImagePage(int page, int size, String query) {
+
+        Page<Image> imagePage = imageRepository.findBySingleQuery(PageRequest.of(page, size), query);
+
+        return buildImageModelPage(imagePage);
+    }
+
+    @Transactional
+    public Page<ImageModel> getImagePage(int page, int size, ImageModel imageModel) {
+
+        Page<Image> imagePage = imageRepository.findByImageModel(PageRequest.of(page, size), imageModel);
+
+        return buildImageModelPage(imagePage);
+    }
+
+    @Transactional
+    protected Page<ImageModel> buildImageModelPage(Page<Image> imagePage) {
+
+        return imagePage.map(image ->
+                ImageModel.builder()
                         .id(image.getId())
                         .imageFile(image.getImageBlob())
                         .imageName(image.getName())
                         .description(image.getDescription())
                         .date(image.getDate())
                         .authorName(image.getAuthor().getName())
-                        .tagNames(image.getTags().stream().map(Tag::getName).collect(Collectors.toSet()))
+                        .tagNames(image.getTags().stream()
+                                .map(Tag::getName)
+                                .collect(Collectors.toSet()))
                         .uploadDate(image.getUploadDate())
                         .thumbnail(image.getThumbnail())
-                        .build()
-        ).toList();
+                        .build());
     }
 }

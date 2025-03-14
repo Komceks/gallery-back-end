@@ -1,4 +1,4 @@
-package lt.restservice.bl;
+package lt.restservice.bl.utils;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

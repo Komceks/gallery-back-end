@@ -1,4 +1,4 @@
-package lt.restservice.bl;
+package lt.restservice.bl.models;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class CreateImageModel {
+public class ImageModel {
 
     private final Long id;
     private final byte[] imageFile;

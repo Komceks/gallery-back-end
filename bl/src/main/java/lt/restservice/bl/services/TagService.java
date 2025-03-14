@@ -1,10 +1,11 @@
-package lt.restservice.bl;
+package lt.restservice.bl.services;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lt.restservice.bl.repositories.TagRepository;
 import lt.restservice.model.Tag;
 
 import lombok.RequiredArgsConstructor;
