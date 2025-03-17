@@ -103,4 +103,24 @@ public class ImageService {
                         .thumbnail(image.getThumbnail())
                         .build());
     }
+
+    @Transactional
+    public ImageModel getImageById(Long id) {
+
+        Image image = imageRepository.findById(id).orElseThrow();
+
+        return ImageModel.builder()
+                .id(image.getId())
+                .imageFile(image.getImageBlob())
+                .imageName(image.getName())
+                .description(image.getDescription())
+                .date(image.getDate())
+                .authorName(image.getAuthor().getName())
+                .tagNames(image.getTags().stream()
+                        .map(Tag::getName)
+                        .collect(Collectors.toSet()))
+                .uploadDate(image.getUploadDate())
+                .thumbnail(image.getThumbnail())
+                .build();
+    }
 }

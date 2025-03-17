@@ -2,6 +2,7 @@ package lt.restservice.app;
 
 import java.io.IOException;
 
+import lt.restservice.app.dto.OpenImageResponse;
 import lt.restservice.app.dto.ThumbnailDto;
 import lt.restservice.app.dto.SearchOrUploadRequest;
 
@@ -69,5 +70,12 @@ public class GalleryController {
                 galleryPageResponseMapper.toGalleryPageResponse(page, size, searchRequest);
 
         return ResponseEntity.ok(galleryPageResponse);
+    }
+
+    @GetMapping("image/{id}")
+    public ResponseEntity<OpenImageResponse> getImage(@PathVariable("id") Long id) {
+        OpenImageResponse imageResponse = galleryPageResponseMapper.toOpenImageResponse(id);
+
+        return ResponseEntity.ok(imageResponse);
     }
 }
