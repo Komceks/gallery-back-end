@@ -4,9 +4,9 @@ import jakarta.persistence.Tuple;
 import jakarta.persistence.criteria.Join;
 
 import jakarta.persistence.criteria.Path;
-import lt.restservice.bl.models.SearchImage;
-import lt.restservice.bl.models.ThumbnailDtoList;
-import lt.restservice.bl.utils.CriteriaQueryUtils;
+import lt.restservice.bl.models.ImageSearch;
+import lt.restservice.bl.models.ThumbnailListDto;
+import lt.restservice.bl.repositories.specifications.ImageSpecifications;
 import lt.restservice.model.Author;
 import lt.restservice.model.Author_;
 import lt.restservice.model.Image;
@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
@@ -39,13 +38,17 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
 
     private final EntityManager em;
 
-    public Page<ThumbnailDtoList> findByImageSearchRequest(SearchImage searchImage) {
-        Pageable pageable = PageRequest.of(searchImage.getPage(), searchImage.getSize());
+    public Page<ThumbnailListDto> findByImageSearchRequest(ImageSearch imageSearch) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<Image> image = cq.from(Image.class);
-        Join<Image, Author> authorJoin = image.join(Image_.author);
 
+        Specification<Image> searchSpecification = ImageSpecifications.buildImageSpecification(imageSearch);
+        Predicate predicate = searchSpecification.toPredicate(image, cq, cb);
+        Long searchCount = countBySearch(searchSpecification);
+        cq.distinct(true).where(predicate);
+
+        Join<Image, Author> authorJoin = image.join(Image_.author);
         Path<Long> idPath = image.get(Image_.id);
         Path<String> namePath = image.get(Image_.name);
         Path<String> descriptionPath = image.get(Image_.description);
@@ -62,18 +65,14 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
                 thumbnailPath
         );
 
-        Specification<Image> searchSpecification = CriteriaQueryUtils.buildImageSpecification(searchImage);
-        Predicate predicate = searchSpecification.toPredicate(image, cq, cb);
-        Long searchCount = countBySearch(searchSpecification);
-        cq.distinct(true).where(predicate);
-
+        Pageable pageable = imageSearch.getPageable();
         List<Tuple> resultList = em.createQuery(cq)
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
 
-        List<ThumbnailDtoList> result = resultList.stream()
-                .map(tuple -> ThumbnailDtoList.builder()
+        List<ThumbnailListDto> result = resultList.stream()
+                .map(tuple -> ThumbnailListDto.builder()
                         .id(tuple.get(idPath))
                         .imageName(tuple.get(namePath))
                         .description(tuple.get(descriptionPath))
@@ -91,11 +90,12 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<Image> image = cq.from(Image.class);
         Predicate predicate = specification.toPredicate(image, cq, cb);
-        if (predicate == null) {
-            cq.select(cb.countDistinct(image));
-        } else {
+        cq.select(cb.countDistinct(image));
+
+        if (predicate != null) {
             cq.select(cb.countDistinct(image)).where(predicate);
         }
+
         return em.createQuery(cq).getSingleResult();
     }
 }

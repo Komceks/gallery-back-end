@@ -35,12 +35,7 @@ public class GalleryController {
 
     @PostMapping("/search")
     public ResponseEntity<Page<ThumbnailDto>> search(@Valid @RequestBody ImageSearchRequest dto) {
-        if (dto.isValid()) {
-            Page<ThumbnailDto> thumbnailDtoPage = galleryPageResponseMapper.toThumbnailDtoPage(dto);
-            return ResponseEntity.ok(thumbnailDtoPage);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-
+        Page<ThumbnailDto> thumbnailDtoPage = galleryPageResponseMapper.toThumbnailDtoPage(dto);
+        return ResponseEntity.ok(thumbnailDtoPage);
     }
 }

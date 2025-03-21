@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lt.restservice.bl.models.ThumbnailDtoList;
+import lt.restservice.bl.models.ThumbnailListDto;
 
 @Data
 @AllArgsConstructor
@@ -18,14 +18,14 @@ public class ThumbnailDto {
     private final LocalDate date;
     private final byte[] thumbnail;
 
-    public static ThumbnailDto of(ThumbnailDtoList thumbnailDtoList) {
+    public static ThumbnailDto of(ThumbnailListDto thumbnailListDto) {
         return ThumbnailDto.builder()
-                .id(thumbnailDtoList.getId())
-                .imageName(thumbnailDtoList.getImageName())
-                .description(thumbnailDtoList.getDescription())
-                .authorName(thumbnailDtoList.getAuthorName())
-                .date(thumbnailDtoList.getDate())
-                .thumbnail(thumbnailDtoList.getThumbnail())
+                .id(thumbnailListDto.getId())
+                .imageName(thumbnailListDto.getImageName())
+                .description(thumbnailListDto.getDescription())
+                .authorName(thumbnailListDto.getAuthorName())
+                .date(thumbnailListDto.getDate())
+                .thumbnail(thumbnailListDto.getThumbnail())
                 .build();
     }
 }

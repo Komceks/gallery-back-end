@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Set;
 
 import lt.restservice.bl.models.CreateImageModel;
-import lt.restservice.bl.models.SearchImage;
-import lt.restservice.bl.models.ThumbnailDtoList;
+import lt.restservice.bl.models.ImageSearch;
+import lt.restservice.bl.models.ThumbnailListDto;
 import lt.restservice.bl.utils.ThumbnailGenerator;
 import lt.restservice.bl.repositories.ImageRepository;
 import lt.restservice.model.Author;
@@ -54,7 +54,7 @@ public class ImageService {
         }
     }
 
-    public Page<ThumbnailDtoList> createThumbnailDtoPage(SearchImage searchImage) {
-        return imageRepository.findByImageSearchRequest(searchImage);
+    public Page<ThumbnailListDto> createThumbnailListDtoPage(ImageSearch imageSearch) {
+        return imageRepository.findByImageSearchRequest(imageSearch);
     }
 }

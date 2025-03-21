@@ -15,9 +15,12 @@ public class ImageSearchDto {
     private final String imageName;
     private final String description;
     private final String authorName;
+
     @PastOrPresent
     private final LocalDate dateFrom;
+
     @PastOrPresent
     private final LocalDate dateTo;
+
     private final Set<String> tags;
 }

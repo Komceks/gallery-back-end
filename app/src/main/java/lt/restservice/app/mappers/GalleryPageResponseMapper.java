@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import lt.restservice.app.dto.ImageSearchDto;
 import lt.restservice.app.dto.ImageSearchRequest;
 import lt.restservice.app.dto.ThumbnailDto;
-import lt.restservice.bl.models.SearchImage;
-import lt.restservice.bl.models.ThumbnailDtoList;
+import lt.restservice.bl.models.ImageSearch;
+import lt.restservice.bl.models.ThumbnailListDto;
 import lt.restservice.bl.services.ImageService;
 
 @Slf4j
@@ -23,16 +23,16 @@ public class GalleryPageResponseMapper {
     private final ImageService imageService;
 
     public Page<ThumbnailDto> toThumbnailDtoPage(ImageSearchRequest imageSearchRequest) {
-        SearchImage searchImage = toSearchImage(imageSearchRequest);
+        ImageSearch imageSearch = toSearchImage(imageSearchRequest);
 
-        Page<ThumbnailDtoList> thumbnailDtoPage = imageService.createThumbnailDtoPage(searchImage);
-        return of(thumbnailDtoPage);
+        Page<ThumbnailListDto> thumbnailListDtoPage = imageService.createThumbnailListDtoPage(imageSearch);
+        return of(thumbnailListDtoPage);
     }
 
-    private static SearchImage toSearchImage(ImageSearchRequest imageSearchRequest) {
-        SearchImage.SearchImageBuilder builder = SearchImage.builder()
-                .page(imageSearchRequest.getPage())
-                .size(imageSearchRequest.getSize())
+    private static ImageSearch toSearchImage(ImageSearchRequest imageSearchRequest) {
+        ImageSearch.ImageSearchBuilder builder = ImageSearch.builder()
+                .pageNumber(imageSearchRequest.getPageNumber())
+                .pageSize(imageSearchRequest.getPageSize())
                 .query(imageSearchRequest.getQuery());
 
         ImageSearchDto imageSearchDto = imageSearchRequest.getImageSearchDto();
@@ -47,7 +47,7 @@ public class GalleryPageResponseMapper {
         return builder.build();
     }
 
-    private static Page<ThumbnailDto> of(Page<ThumbnailDtoList> thumbnailDtoPage) {
-        return thumbnailDtoPage.map(ThumbnailDto::of);
+    private static Page<ThumbnailDto> of(Page<ThumbnailListDto> thumbnailListDtoPage) {
+        return thumbnailListDtoPage.map(ThumbnailDto::of);
     }
 }
