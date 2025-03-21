@@ -10,23 +10,21 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import lt.restservice.app.dto.SearchOrUploadRequest;
-import lt.restservice.bl.models.ImageModel;
+import lt.restservice.app.dto.ImageUploadRequest;
+import lt.restservice.bl.models.CreateImageModel;
 import lt.restservice.bl.services.ImageService;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class UploadRequestMapper {
 
     private final ImageService imageService;
 
-    @Transactional
-    public void upload(SearchOrUploadRequest dto, MultipartFile multipartFile) throws IOException {
-
+    public void upload(ImageUploadRequest dto, MultipartFile multipartFile) throws IOException {
         LocalDateTime uploadDate = LocalDateTime.now();
-
-        ImageModel imageModel = ImageModel.builder()
+        CreateImageModel createImageModel = CreateImageModel.builder()
                 .imageFile(multipartFile.getBytes())
                 .imageName(dto.getImageName())
                 .description(dto.getDescription())
@@ -35,7 +33,6 @@ public class UploadRequestMapper {
                 .tagNames(dto.getTags())
                 .uploadDate(uploadDate)
                 .build();
-
-        imageService.uploadImage(imageModel);
+        imageService.uploadImage(createImageModel);
     }
 }

@@ -1,7 +1,6 @@
 package lt.restservice.bl.models;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -11,16 +10,14 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class ImageModel {
-
-    private final Long id;
-    private final byte[] imageFile;
+public class SearchImage {
+    private final int page;
+    private final int size;
+    private final String query;
     private final String imageName;
     private final String description;
-    private final Date date;
+    private final LocalDate dateFrom;
+    private final LocalDate dateTo;
     private final String authorName;
     private final Set<String> tagNames;
-    private final LocalDateTime uploadDate;
-    private final byte[] thumbnail;
-
 }

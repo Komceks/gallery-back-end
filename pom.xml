@@ -24,7 +24,9 @@
     <spring-jpa.version>3.4.3</spring-jpa.version>
     <flywaydb.version>11.3.1</flywaydb.version>
     <lombok.version>1.18.36</lombok.version>
-    <apache-commons.version>4.4</apache-commons.version>
+    <collections.version>4.4</collections.version>
+    <lang.version>3.17.0</lang.version>
+    <hibernate-validator.version>9.0.0.CR1</hibernate-validator.version>
     <imgscalr.version>4.2</imgscalr.version>
     <jpamodelgen.version>6.6.10.Final</jpamodelgen.version>
     <jakarta-bind.version>4.0.2</jakarta-bind.version>
@@ -39,6 +41,16 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${hibernate-validator.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${lang.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.hibernate.orm</groupId>
         <artifactId>hibernate-jpamodelgen</artifactId>
@@ -84,7 +96,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-collections4</artifactId>
-        <version>${apache-commons.version}</version>
+        <version>${collections.version}</version>
       </dependency>
       <dependency>
         <groupId>org.imgscalr</groupId>

@@ -15,29 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TagService {
 
     private final TagRepository tagRepository;
 
-    @Transactional
     public Set<Tag> findOrCreateTags(Set<String> tagNames) {
-
         Set<Tag> existingTags = new HashSet<>(tagRepository.findByNameIn(tagNames));
-
         Set<String> existingTagNames = existingTags.stream()
                 .map(Tag::getName)
                 .collect(Collectors.toSet());
 
         Set<String> missingTagNames = new HashSet<>(tagNames);
         missingTagNames.removeAll(existingTagNames);
-
-        List<Tag> newTags = missingTagNames.stream()
-                .map(Tag::new)
-                .toList();
+        List<Tag> newTags = missingTagNames.stream().map(Tag::new).toList();
 
         Set<Tag> allTags = new HashSet<>(existingTags);
         allTags.addAll(newTags);
-
         return allTags;
     }
 }
