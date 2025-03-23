@@ -8,61 +8,48 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import lt.restservice.app.dto.OpenImageResponse;
+import lt.restservice.app.dto.ImageSearchDto;
+import lt.restservice.app.dto.ImageSearchRequest;
 import lt.restservice.app.dto.ThumbnailDto;
-import lt.restservice.app.dto.SearchOrUploadRequest;
-import lt.restservice.bl.models.ImageModel;
+import lt.restservice.bl.models.ImageSearch;
+import lt.restservice.bl.models.ThumbnailListDto;
 import lt.restservice.bl.services.ImageService;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class GalleryPageResponseMapper {
 
     private final ImageService imageService;
 
-    @Transactional
-    public Page<ThumbnailDto> toGalleryPageResponse(int page, int size) {
+    public Page<ThumbnailDto> toThumbnailDtoPage(ImageSearchRequest imageSearchRequest) {
+        ImageSearch imageSearch = toSearchImage(imageSearchRequest);
 
-        Page<ImageModel> imageModelPage = imageService.getImagePage(page, size);
-
-        return toThumbnailDtoPage(imageModelPage);
+        Page<ThumbnailListDto> thumbnailListDtoPage = imageService.createThumbnailListDtoPage(imageSearch);
+        return of(thumbnailListDtoPage);
     }
 
-    @Transactional
-    public Page<ThumbnailDto> toGalleryPageResponse(int page, int size, String query) {
+    private static ImageSearch toSearchImage(ImageSearchRequest imageSearchRequest) {
+        ImageSearch.ImageSearchBuilder builder = ImageSearch.builder()
+                .pageNumber(imageSearchRequest.getPageNumber())
+                .pageSize(imageSearchRequest.getPageSize())
+                .query(imageSearchRequest.getQuery());
 
-        Page<ImageModel> imageModelPage = imageService.getImagePage(page, size, query);
-
-        return toThumbnailDtoPage(imageModelPage);
+        ImageSearchDto imageSearchDto = imageSearchRequest.getImageSearchDto();
+        if (imageSearchDto != null) {
+            builder = builder.imageName(imageSearchDto.getImageName())
+                    .description(imageSearchDto.getDescription())
+                    .dateFrom(imageSearchDto.getDateFrom())
+                    .dateTo(imageSearchDto.getDateTo())
+                    .authorName(imageSearchDto.getAuthorName())
+                    .tagNames(imageSearchDto.getTags());
+        }
+        return builder.build();
     }
 
-    @Transactional
-    public Page<ThumbnailDto> toGalleryPageResponse(int page, int size, SearchOrUploadRequest searchRequest) {
-
-        ImageModel imageModel = ImageModel.builder()
-                .imageName(searchRequest.getImageName())
-                .description(searchRequest.getDescription())
-                .date(searchRequest.getDate())
-                .authorName(searchRequest.getAuthorName())
-                .tagNames(searchRequest.getTags())
-                .build();
-
-        Page<ImageModel> imageModelPage = imageService.getImagePage(page, size, imageModel);
-
-        return toThumbnailDtoPage(imageModelPage);
-    }
-
-    @Transactional
-    protected Page<ThumbnailDto> toThumbnailDtoPage(Page<ImageModel> imageModelPage) {
-        return imageModelPage.map(imageModel ->
-                ThumbnailDto.builder()
-                        .id(imageModel.getId())
-                        .imageName(imageModel.getImageName())
-                        .description(imageModel.getDescription())
-                        .authorName(imageModel.getAuthorName())
-                        .date(imageModel.getDate())
-                        .thumbnail(imageModel.getThumbnail())
-                        .build());
+    private static Page<ThumbnailDto> of(Page<ThumbnailListDto> thumbnailListDtoPage) {
+        return thumbnailListDtoPage.map(ThumbnailDto::of);
     }
 
     @Transactional

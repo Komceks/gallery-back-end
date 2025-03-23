@@ -1,6 +1,6 @@
 package lt.restservice.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -49,7 +49,7 @@ public class Image {
 
     @NonNull
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     // Owning side
     @NonNull
@@ -73,5 +73,4 @@ public class Image {
 
     @Column(name = "thumbnail", nullable = false)
     private byte @NonNull [] thumbnail;
-
 }

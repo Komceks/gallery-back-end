@@ -33,5 +33,4 @@ public class Tag {
 
     @ManyToMany(mappedBy = "tags")
     private Set<Image> images = new HashSet<>();
-
 }

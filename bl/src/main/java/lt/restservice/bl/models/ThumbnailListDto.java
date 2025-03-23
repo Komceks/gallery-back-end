@@ -1,26 +1,22 @@
 package lt.restservice.bl.models;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.util.Set;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Data
 @AllArgsConstructor
 @Builder
-public class ImageModel {
-
+public class ThumbnailListDto {
     private final Long id;
-    private final byte[] imageFile;
     private final String imageName;
     private final String description;
-    private final Date date;
     private final String authorName;
-    private final Set<String> tagNames;
-    private final LocalDateTime uploadDate;
+    private final LocalDate date;
     private final byte[] thumbnail;
-
 }

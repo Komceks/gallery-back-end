@@ -1,8 +1,9 @@
 package lt.restservice.bl.services;
 
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import lt.restservice.bl.repositories.TagRepository;
@@ -15,29 +16,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TagService {
 
     private final TagRepository tagRepository;
 
-    @Transactional
     public Set<Tag> findOrCreateTags(Set<String> tagNames) {
-
         Set<Tag> existingTags = new HashSet<>(tagRepository.findByNameIn(tagNames));
+        Map<String, Tag> tagMap = existingTags.stream()
+                .collect(Collectors.toMap(Tag::getName, Function.identity()));
 
-        Set<String> existingTagNames = existingTags.stream()
-                .map(Tag::getName)
+        return tagNames.stream()
+                .map(tagName -> tagMap.computeIfAbsent(tagName, Tag::new))
                 .collect(Collectors.toSet());
-
-        Set<String> missingTagNames = new HashSet<>(tagNames);
-        missingTagNames.removeAll(existingTagNames);
-
-        List<Tag> newTags = missingTagNames.stream()
-                .map(Tag::new)
-                .toList();
-
-        Set<Tag> allTags = new HashSet<>(existingTags);
-        allTags.addAll(newTags);
-
-        return allTags;
     }
 }
