@@ -31,6 +31,7 @@
     <jpamodelgen.version>6.6.10.Final</jpamodelgen.version>
     <jakarta-bind.version>4.0.2</jakarta-bind.version>
     <jaxb-runtime.version>4.0.5</jaxb-runtime.version>
+    <spring-doc.version>2.8.5</spring-doc.version>
   </properties>
 
   <modules>
@@ -102,6 +103,11 @@
         <groupId>org.imgscalr</groupId>
         <artifactId>imgscalr-lib</artifactId>
         <version>${imgscalr.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>${spring-doc.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
