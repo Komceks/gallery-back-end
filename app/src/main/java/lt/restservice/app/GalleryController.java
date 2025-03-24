@@ -35,14 +35,12 @@ public class GalleryController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<Page<ThumbnailDto>> search(@Valid @RequestBody ImageSearchRequest dto) {
-        Page<ThumbnailDto> thumbnailDtoPage = galleryPageResponseMapper.toThumbnailDtoPage(dto);
-        return ResponseEntity.ok(thumbnailDtoPage);
+    public Page<ThumbnailDto> search(@Valid @RequestBody ImageSearchRequest dto) {
+        return galleryPageResponseMapper.toThumbnailDtoPage(dto);
     }
 
     @GetMapping("image/{id}")
-    public ResponseEntity<ImageViewResponse> viewImage(@PathVariable("id") Long id) {
-        ImageViewResponse imageViewResponse = galleryPageResponseMapper.toImageViewResponse(id);
-        return ResponseEntity.ok(imageViewResponse);
+    public ImageViewResponse viewImage(@PathVariable("id") Long id) {
+        return galleryPageResponseMapper.toImageViewResponse(id);
     }
 }
