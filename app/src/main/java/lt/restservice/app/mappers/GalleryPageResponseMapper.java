@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import lt.restservice.app.dto.ImageSearchDto;
+import lt.restservice.app.dto.ImageSearchPart;
 import lt.restservice.app.dto.ImageSearchRequest;
 import lt.restservice.app.dto.ThumbnailDto;
 import lt.restservice.bl.models.ImageSearch;
@@ -35,14 +35,14 @@ public class GalleryPageResponseMapper {
                 .pageSize(imageSearchRequest.getPageSize())
                 .query(imageSearchRequest.getQuery());
 
-        ImageSearchDto imageSearchDto = imageSearchRequest.getImageSearchDto();
-        if (imageSearchDto != null) {
-            builder = builder.imageName(imageSearchDto.getImageName())
-                    .description(imageSearchDto.getDescription())
-                    .dateFrom(imageSearchDto.getDateFrom())
-                    .dateTo(imageSearchDto.getDateTo())
-                    .authorName(imageSearchDto.getAuthorName())
-                    .tagNames(imageSearchDto.getTags());
+        ImageSearchPart imageSearchPart = imageSearchRequest.getImageSearchPart();
+        if (imageSearchPart != null) {
+            builder = builder.imageName(imageSearchPart.getImageName())
+                    .description(imageSearchPart.getDescription())
+                    .dateFrom(imageSearchPart.getDateFrom())
+                    .dateTo(imageSearchPart.getDateTo())
+                    .authorName(imageSearchPart.getAuthorName())
+                    .tagNames(imageSearchPart.getTags());
         }
         return builder.build();
     }

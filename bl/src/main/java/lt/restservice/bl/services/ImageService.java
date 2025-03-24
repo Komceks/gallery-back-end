@@ -45,16 +45,14 @@ public class ImageService {
                     .setUploadDate(createImageModel.getUploadDate())
                     .setThumbnail(thumbnail);
 
-            log.debug("Saving image: {}", image);
             imageRepository.save(image);
 
         } catch (ConstraintViolationException ex) {
-            log.error("Constraint violation during image save:");
-            throw ex;
+            log.error("Constraint violation during image save:", ex);
         }
     }
 
     public Page<ThumbnailListDto> createThumbnailListDtoPage(ImageSearch imageSearch) {
-        return imageRepository.findByImageSearchRequest(imageSearch);
+        return imageRepository.search(imageSearch);
     }
 }

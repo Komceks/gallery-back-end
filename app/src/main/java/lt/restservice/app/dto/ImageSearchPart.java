@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class ImageSearchDto {
+public class ImageSearchPart {
     private final String imageName;
     private final String description;
     private final String authorName;

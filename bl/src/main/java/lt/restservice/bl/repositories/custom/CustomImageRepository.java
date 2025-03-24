@@ -6,5 +6,5 @@ import lt.restservice.bl.models.ImageSearch;
 import lt.restservice.bl.models.ThumbnailListDto;
 
 public interface CustomImageRepository {
-    Page<ThumbnailListDto> findByImageSearchRequest(ImageSearch imageSearch);
+    Page<ThumbnailListDto> search(ImageSearch imageSearch);
 }

@@ -16,9 +16,7 @@ public class ImageUploadRequest {
     private final String description;
     @NotBlank
     private final String authorName;
-
     @PastOrPresent
     private final LocalDate date;
-
     private final Set<String> tags;
 }

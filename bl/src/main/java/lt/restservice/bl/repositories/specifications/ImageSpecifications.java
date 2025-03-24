@@ -1,5 +1,6 @@
 package lt.restservice.bl.repositories.specifications;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,8 +11,8 @@ import lt.restservice.bl.utils.CriteriaQueryUtils;
 import lt.restservice.model.Image;
 
 public class ImageSpecifications {
-
     private static final String WHITESPACE_REGEX = "\\s+";
+    private static final String DATE_REGEX = "^\\d{4}-\\d{2}-\\d{2}$";
 
     public static Specification<Image> imageSpecifications(ImageSearch imageSearch) {
         return ImageSpecBuilder.builder()
@@ -31,13 +32,17 @@ public class ImageSpecifications {
     }
 
     private static Specification<Image> buildImageSpecification(String word) {
-        return ImageSpecBuilder.builder()
+        ImageSpecBuilder imageSpecBuilder = ImageSpecBuilder.builder()
                 .orName(word)
                 .orDescription(word)
                 .orAuthor(word)
-                .orDate(word)
-                .tagsEqual(word)
-                .build();
+                .tagsEqual(word);
+
+        if (word.matches(DATE_REGEX)) {
+            imageSpecBuilder = imageSpecBuilder.orDate(LocalDate.parse(word));
+        }
+
+        return imageSpecBuilder.build();
     }
 
     public static Specification<Image> buildImageSpecification(ImageSearch imageSearch) {

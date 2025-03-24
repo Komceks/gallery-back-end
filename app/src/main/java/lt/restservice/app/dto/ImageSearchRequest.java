@@ -23,11 +23,11 @@ public class ImageSearchRequest {
     private final String query;
 
     @Valid
-    private final ImageSearchDto imageSearchDto;
+    private final ImageSearchPart imageSearchPart;
 
     @JsonIgnore
     @AssertTrue(message = "Either query or imageSearchDto should be set")
     public boolean isValid() {
-        return query == null ^ imageSearchDto == null;
+        return query == null ^ imageSearchPart == null;
     }
 }

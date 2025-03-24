@@ -9,8 +9,6 @@ import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 
-import lombok.extern.slf4j.Slf4j;
-
 import lt.restservice.bl.utils.CriteriaQueryUtils;
 import lt.restservice.model.Author;
 import lt.restservice.model.Author_;
@@ -19,10 +17,7 @@ import lt.restservice.model.Image_;
 import lt.restservice.model.Tag;
 import lt.restservice.model.Tag_;
 
-@Slf4j
 public class ImageSpecBuilder {
-
-    private static final String DATE_REGEX = "^\\d{4}-\\d{2}-\\d{2}$";
     private Specification<Image> specification;
 
     private ImageSpecBuilder() {
@@ -40,7 +35,6 @@ public class ImageSpecBuilder {
     public ImageSpecBuilder name(String name) {
 
         if (StringUtils.isNotBlank(name)) {
-            log.debug("name {}", name);
             this.specification = CriteriaQueryUtils.and(this.specification,
                     (root, query, cb) ->
                             cb.like(cb.lower(root.get(Image_.name)), CriteriaQueryUtils.toLikePattern(name))
@@ -65,7 +59,6 @@ public class ImageSpecBuilder {
     public ImageSpecBuilder description(String description) {
 
         if (StringUtils.isNotBlank(description)) {
-            log.debug("description {}", description);
             this.specification = CriteriaQueryUtils.and(this.specification,
                     (root, query, cb) ->
                             cb.like(cb.lower(root.get(Image_.description)), CriteriaQueryUtils.toLikePattern(description))
@@ -90,7 +83,6 @@ public class ImageSpecBuilder {
     public ImageSpecBuilder author(String author) {
 
         if (StringUtils.isNotBlank(author)) {
-            log.debug("author {}", author);
             this.specification = CriteriaQueryUtils.and(this.specification,
                     (root, query, cb) -> {
                         Join<Image, Author> authorJoin = root.join(Image_.author);
@@ -114,21 +106,17 @@ public class ImageSpecBuilder {
         return this;
     }
 
-    public ImageSpecBuilder orDate(String date) {
-
-        if (date.matches(DATE_REGEX)) {
-            this.specification = CriteriaQueryUtils.or(this.specification,
-                    (root, query, cb) ->
-                            cb.equal(root.get(Image_.date), LocalDate.parse(date))
-            );
-        }
+    public ImageSpecBuilder orDate(LocalDate date) {
+        this.specification = CriteriaQueryUtils.or(this.specification,
+                (root, query, cb) ->
+                        cb.equal(root.get(Image_.date), date)
+        );
 
         return this;
     }
 
     public ImageSpecBuilder dateFrom(LocalDate dateFrom) {
         if (dateFrom != null) {
-            log.debug("dateFrom {}", dateFrom);
             this.specification = CriteriaQueryUtils.and(this.specification,
                     (root, query, cb) ->
                             cb.greaterThanOrEqualTo(root.get(Image_.date), dateFrom)
@@ -139,7 +127,6 @@ public class ImageSpecBuilder {
 
     public ImageSpecBuilder dateTo(LocalDate dateTo) {
         if (dateTo != null) {
-            log.debug("dateTo {}", dateTo);
             this.specification = CriteriaQueryUtils.and(this.specification,
                     (root, query, cb) ->
                             cb.lessThanOrEqualTo(root.get(Image_.date), dateTo)
@@ -151,7 +138,6 @@ public class ImageSpecBuilder {
     public ImageSpecBuilder tagsIn(Set<String> tags) {
 
         if (tags != null && !tags.isEmpty()) {
-            log.debug("tags {}", tags);
             this.specification = CriteriaQueryUtils.and(this.specification,
                     (root, query, cb) -> {
                         Join<Image, Tag> tagSetJoin = root.join(Image_.tags);

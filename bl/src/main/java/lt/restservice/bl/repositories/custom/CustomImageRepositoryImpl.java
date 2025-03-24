@@ -38,7 +38,7 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
 
     private final EntityManager em;
 
-    public Page<ThumbnailListDto> findByImageSearchRequest(ImageSearch imageSearch) {
+    public Page<ThumbnailListDto> search(ImageSearch imageSearch) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<Image> image = cq.from(Image.class);
