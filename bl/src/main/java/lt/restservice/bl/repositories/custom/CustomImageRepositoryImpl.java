@@ -3,8 +3,11 @@ package lt.restservice.bl.repositories.custom;
 import jakarta.persistence.Tuple;
 import jakarta.persistence.criteria.Join;
 
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.SetJoin;
 import lt.restservice.bl.models.ImageSearch;
+import lt.restservice.bl.models.ImageView;
 import lt.restservice.bl.models.ThumbnailListDto;
 import lt.restservice.bl.repositories.specifications.ImageSpecifications;
 import lt.restservice.model.Author;
@@ -30,6 +33,8 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 import lombok.RequiredArgsConstructor;
+import lt.restservice.model.Tag;
+import lt.restservice.model.Tag_;
 
 @Repository
 @RequiredArgsConstructor
@@ -97,5 +102,30 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
         }
 
         return em.createQuery(cq).getSingleResult();
+    }
+
+    public ImageView findImageViewById(Long id) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<Image> image = cq.from(Image.class);
+        SetJoin<Image, Tag> tagJoin = image.join(Image_.tags, JoinType.LEFT);
+
+        Path<byte[]> imageBlobPath = image.get(Image_.imageBlob);
+        Path<String> tagNamePath = tagJoin.get(Tag_.name);
+
+        cq.multiselect(
+                imageBlobPath,
+                tagNamePath
+        );
+        cq.where(cb.equal(image.get(Image_.id), id));
+
+        List<Tuple> tuple = em.createQuery(cq).getResultList();
+
+        return ImageView.builder()
+                .image(tuple.getFirst().get(imageBlobPath))
+                .tags(tuple.stream()
+                        .map(tpl -> tpl.get(tagNamePath))
+                        .collect(Collectors.toSet()))
+                .build();
     }
 }

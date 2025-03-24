@@ -12,7 +12,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-
 public class ImageSearchRequest {
     @PositiveOrZero
     private final int pageNumber;

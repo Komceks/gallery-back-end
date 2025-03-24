@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import lt.restservice.app.dto.OpenImageResponse;
+import lt.restservice.app.dto.ImageViewResponse;
 import lt.restservice.app.dto.ImageSearchDto;
 import lt.restservice.app.dto.ImageSearchRequest;
 import lt.restservice.app.dto.ThumbnailDto;
@@ -53,14 +53,8 @@ public class GalleryPageResponseMapper {
     }
 
     @Transactional
-    public OpenImageResponse toOpenImageResponse(Long id) {
-
-        ImageModel imageModel = imageService.getImageById(id);
-
-        return OpenImageResponse.builder()
-                .image(imageModel.getImageFile())
-                .tags(imageModel.getTagNames())
-                .build();
+    public ImageViewResponse toImageViewResponse(Long id) {
+        return ImageViewResponse.of(imageService.createImageViewById(id));
     }
 
 }

@@ -1,4 +1,4 @@
-package lt.restservice.app.dto;
+package lt.restservice.bl.models;
 
 import java.util.Set;
 
@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class OpenImageResponse {
+public class ImageView {
     private final byte[] image;
     private final Set<String> tags;
 }

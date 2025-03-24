@@ -2,7 +2,7 @@ package lt.restservice.app;
 
 import java.io.IOException;
 
-import lt.restservice.app.dto.OpenImageResponse;
+import lt.restservice.app.dto.ImageViewResponse;
 import jakarta.validation.Valid;
 import lt.restservice.app.dto.ImageSearchRequest;
 import lt.restservice.app.dto.ThumbnailDto;
@@ -41,9 +41,8 @@ public class GalleryController {
     }
 
     @GetMapping("image/{id}")
-    public ResponseEntity<OpenImageResponse> getImage(@PathVariable("id") Long id) {
-        OpenImageResponse imageResponse = galleryPageResponseMapper.toOpenImageResponse(id);
-
-        return ResponseEntity.ok(imageResponse);
+    public ResponseEntity<ImageViewResponse> viewImage(@PathVariable("id") Long id) {
+        ImageViewResponse imageViewResponse = galleryPageResponseMapper.toImageViewResponse(id);
+        return ResponseEntity.ok(imageViewResponse);
     }
 }
