@@ -1,4 +1,4 @@
-package lt.restservice.bl.models;
+package lt.restservice.bl.model;
 
 import java.util.Set;
 

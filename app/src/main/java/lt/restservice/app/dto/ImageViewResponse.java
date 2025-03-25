@@ -5,7 +5,7 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lt.restservice.bl.models.ImageView;
+import lt.restservice.bl.model.ImageView;
 
 @Data
 @AllArgsConstructor

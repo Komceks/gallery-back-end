@@ -9,9 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import lt.restservice.app.dto.ImageSearchRequestPart;
 import lt.restservice.app.dto.ImageSearchRequest;
+import lt.restservice.app.dto.ImageViewResponse;
 import lt.restservice.app.dto.ThumbnailListDto;
 import lt.restservice.bl.model.ImageSearch;
 import lt.restservice.bl.model.ImageSearchPart;
+import lt.restservice.bl.model.ImageView;
 import lt.restservice.bl.model.ThumbnailListModel;
 import lt.restservice.bl.service.ImageService;
 
@@ -55,5 +57,10 @@ public class GalleryPageResponseMapper {
 
     private static Page<ThumbnailListDto> of(Page<ThumbnailListModel> thumbnailListDtoPage) {
         return thumbnailListDtoPage.map(ThumbnailListDto::of);
+    }
+
+    public ImageViewResponse toImageViewResponse(Long id) {
+        ImageView imageView = imageService.viewImage(id);
+        return ImageViewResponse.of(imageView);
     }
 }

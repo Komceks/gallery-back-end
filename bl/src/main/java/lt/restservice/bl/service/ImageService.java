@@ -59,7 +59,7 @@ public class ImageService {
     }
 
     @Transactional
-    public ImageView createImageViewById(Long id) {
-        return imageRepository.findImageViewById(id);
+    public ImageView viewImage(Long id) {
+        return imageRepository.viewImage(id);
     }
 }

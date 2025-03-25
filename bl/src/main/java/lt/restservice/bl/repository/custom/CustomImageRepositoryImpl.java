@@ -10,7 +10,7 @@ import jakarta.persistence.criteria.SetJoin;
 import lt.restservice.bl.model.ImageSearch;
 import lt.restservice.bl.model.ThumbnailListModel;
 import lt.restservice.bl.repository.specification.ImageSpecification;
-import lt.restservice.bl.models.ImageView;
+import lt.restservice.bl.model.ImageView;
 import lt.restservice.model.Author;
 import lt.restservice.model.Author_;
 import lt.restservice.model.Image;
@@ -105,7 +105,7 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
         return em.createQuery(cq).getSingleResult();
     }
 
-    public ImageView findImageViewById(Long id) {
+    public ImageView viewImage(Long id) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<Image> image = cq.from(Image.class);
