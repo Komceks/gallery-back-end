@@ -1,6 +1,6 @@
-package lt.restservice.bl.repositories;
+package lt.restservice.bl.repository;
 
-import lt.restservice.bl.repositories.custom.CustomImageRepository;
+import lt.restservice.bl.repository.custom.CustomImageRepository;
 import lt.restservice.model.Image;
 
 import org.springframework.data.jpa.repository.JpaRepository;

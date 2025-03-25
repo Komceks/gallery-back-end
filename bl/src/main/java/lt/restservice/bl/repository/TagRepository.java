@@ -1,4 +1,4 @@
-package lt.restservice.bl.repositories;
+package lt.restservice.bl.repository;
 
 import java.util.Collection;
 import java.util.Set;

@@ -3,21 +3,21 @@ package lt.restservice.app.dto;
 import java.time.LocalDate;
 import java.util.Set;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ImageUploadRequest {
-    @NotBlank
+@Builder
+public class ImageSearchRequestPart {
     private final String imageName;
-
     private final String description;
-    @NotBlank
     private final String authorName;
     @PastOrPresent
-    private final LocalDate date;
+    private final LocalDate dateFrom;
+    @PastOrPresent
+    private final LocalDate dateTo;
     private final Set<String> tags;
 }

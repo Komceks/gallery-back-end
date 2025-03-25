@@ -1,4 +1,4 @@
-package lt.restservice.bl.services;
+package lt.restservice.bl.service;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import lt.restservice.bl.repositories.TagRepository;
+import lt.restservice.bl.repository.TagRepository;
 import lt.restservice.model.Tag;
 
 import lombok.RequiredArgsConstructor;

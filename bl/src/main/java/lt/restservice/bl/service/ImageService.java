@@ -1,14 +1,15 @@
-package lt.restservice.bl.services;
+package lt.restservice.bl.service;
 
 import java.io.IOException;
 import java.util.Set;
 
-import lt.restservice.bl.models.CreateImageModel;
-import lt.restservice.bl.models.ImageView;
-import lt.restservice.bl.models.ImageSearch;
-import lt.restservice.bl.models.ThumbnailListDto;
+import lt.restservice.bl.model.CreateImageModel;
+import lt.restservice.bl.model.ImageSearch;
+import lt.restservice.bl.model.ThumbnailListModel;
+import lt.restservice.bl.model.ImageView;
+
 import lt.restservice.bl.utils.ThumbnailGenerator;
-import lt.restservice.bl.repositories.ImageRepository;
+import lt.restservice.bl.repository.ImageRepository;
 import lt.restservice.model.Author;
 import lt.restservice.model.Image;
 import lt.restservice.model.Tag;
@@ -46,17 +47,15 @@ public class ImageService {
                     .setUploadDate(createImageModel.getUploadDate())
                     .setThumbnail(thumbnail);
 
-            log.debug("Saving image: {}", image);
             imageRepository.save(image);
 
         } catch (ConstraintViolationException ex) {
-            log.error("Constraint violation during image save:");
-            throw ex;
+            log.error("Constraint violation during image save:", ex);
         }
     }
 
-    public Page<ThumbnailListDto> createThumbnailListDtoPage(ImageSearch imageSearch) {
-        return imageRepository.findByImageSearchRequest(imageSearch);
+    public Page<ThumbnailListModel> search(ImageSearch imageSearch) {
+        return imageRepository.search(imageSearch);
     }
 
     @Transactional
