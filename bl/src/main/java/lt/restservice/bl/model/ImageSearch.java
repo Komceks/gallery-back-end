@@ -1,7 +1,4 @@
-package lt.restservice.bl.models;
-
-import java.time.LocalDate;
-import java.util.Set;
+package lt.restservice.bl.model;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,12 +14,7 @@ public class ImageSearch {
     private final int pageNumber;
     private final int pageSize;
     private final String query;
-    private final String imageName;
-    private final String description;
-    private final LocalDate dateFrom;
-    private final LocalDate dateTo;
-    private final String authorName;
-    private final Set<String> tagNames;
+    private final ImageSearchPart imageSearchPart;
 
     public Pageable getPageable() {
         return PageRequest.of(pageNumber, pageSize);

@@ -16,18 +16,15 @@ import lombok.Data;
 public class ImageSearchRequest {
     @PositiveOrZero
     private final int pageNumber;
-
     @Positive
     private final int pageSize;
-
     private final String query;
-
     @Valid
-    private final ImageSearchPart imageSearchPart;
+    private final ImageSearchRequestPart imageSearchRequestPart;
 
     @JsonIgnore
-    @AssertTrue(message = "Either query or imageSearchDto should be set")
+    @AssertTrue(message = "Either query or imageSearchRequestPart should be set")
     public boolean isValid() {
-        return query == null ^ imageSearchPart == null;
+        return query == null ^ imageSearchRequestPart == null;
     }
 }

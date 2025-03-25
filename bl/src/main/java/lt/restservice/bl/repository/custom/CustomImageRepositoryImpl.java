@@ -1,12 +1,12 @@
-package lt.restservice.bl.repositories.custom;
+package lt.restservice.bl.repository.custom;
 
 import jakarta.persistence.Tuple;
 import jakarta.persistence.criteria.Join;
 
 import jakarta.persistence.criteria.Path;
-import lt.restservice.bl.models.ImageSearch;
-import lt.restservice.bl.models.ThumbnailListDto;
-import lt.restservice.bl.repositories.specifications.ImageSpecifications;
+import lt.restservice.bl.model.ImageSearch;
+import lt.restservice.bl.model.ThumbnailListModel;
+import lt.restservice.bl.repository.specification.ImageSpecification;
 import lt.restservice.model.Author;
 import lt.restservice.model.Author_;
 import lt.restservice.model.Image;
@@ -38,12 +38,12 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
 
     private final EntityManager em;
 
-    public Page<ThumbnailListDto> search(ImageSearch imageSearch) {
+    public Page<ThumbnailListModel> search(ImageSearch imageSearch) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<Image> image = cq.from(Image.class);
 
-        Specification<Image> searchSpecification = ImageSpecifications.buildImageSpecification(imageSearch);
+        Specification<Image> searchSpecification = ImageSpecification.buildSpecification(imageSearch);
         Predicate predicate = searchSpecification.toPredicate(image, cq, cb);
         Long searchCount = countBySearch(searchSpecification);
         cq.distinct(true).where(predicate);
@@ -71,8 +71,8 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
 
-        List<ThumbnailListDto> result = resultList.stream()
-                .map(tuple -> ThumbnailListDto.builder()
+        List<ThumbnailListModel> result = resultList.stream()
+                .map(tuple -> ThumbnailListModel.builder()
                         .id(tuple.get(idPath))
                         .imageName(tuple.get(namePath))
                         .description(tuple.get(descriptionPath))

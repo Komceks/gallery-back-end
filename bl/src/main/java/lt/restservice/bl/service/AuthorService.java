@@ -1,10 +1,10 @@
-package lt.restservice.bl.services;
+package lt.restservice.bl.service;
 
 import org.apache.commons.lang3.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 
-import lt.restservice.bl.repositories.AuthorRepository;
+import lt.restservice.bl.repository.AuthorRepository;
 import lt.restservice.model.Author;
 
 import org.springframework.stereotype.Service;

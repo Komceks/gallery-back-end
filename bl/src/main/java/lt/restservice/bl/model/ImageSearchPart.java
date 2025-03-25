@@ -1,9 +1,8 @@
-package lt.restservice.app.dto;
+package lt.restservice.bl.model;
 
 import java.time.LocalDate;
 import java.util.Set;
 
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,13 +13,8 @@ import lombok.Data;
 public class ImageSearchPart {
     private final String imageName;
     private final String description;
-    private final String authorName;
-
-    @PastOrPresent
     private final LocalDate dateFrom;
-
-    @PastOrPresent
     private final LocalDate dateTo;
-
-    private final Set<String> tags;
+    private final String authorName;
+    private final Set<String> tagNames;
 }

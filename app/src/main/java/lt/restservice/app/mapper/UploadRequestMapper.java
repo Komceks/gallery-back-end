@@ -1,4 +1,4 @@
-package lt.restservice.app.mappers;
+package lt.restservice.app.mapper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import lt.restservice.app.dto.ImageUploadRequest;
-import lt.restservice.bl.models.CreateImageModel;
-import lt.restservice.bl.services.ImageService;
+import lt.restservice.bl.model.CreateImageModel;
+import lt.restservice.bl.service.ImageService;
 
 @Slf4j
 @Component

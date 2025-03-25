@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import lombok.NonNull;
 
 @SpringBootApplication(scanBasePackages = "lt.restservice")
-@EnableJpaRepositories(basePackages = "lt.restservice.bl.repositories")
+@EnableJpaRepositories(basePackages = "lt.restservice.bl.repository")
 @EntityScan("lt.restservice.model")
 public class GalleryApplication {
 

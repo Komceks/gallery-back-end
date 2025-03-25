@@ -1,4 +1,4 @@
-package lt.restservice.bl.models;
+package lt.restservice.bl.model;
 
 import java.time.LocalDate;
 
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @AllArgsConstructor
 @Builder
-public class ThumbnailListDto {
+public class ThumbnailListModel {
     private final Long id;
     private final String imageName;
     private final String description;
