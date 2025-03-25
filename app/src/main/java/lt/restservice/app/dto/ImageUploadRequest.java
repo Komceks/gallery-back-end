@@ -1,22 +1,22 @@
 package lt.restservice.app.dto;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-// At this point its uploadRequest,
-// since its just the upload requests from front-end,
-// with MR3 it might change back to ImageDto
-public class UploadRequest {
-
+public class ImageUploadRequest {
+    @NotBlank
     private final String imageName;
     private final String description;
+    @NotBlank
     private final String authorName;
-    private final Date date;
+    @PastOrPresent
+    private final LocalDate date;
     private final Set<String> tags;
-
 }

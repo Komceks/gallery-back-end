@@ -26,5 +26,4 @@ public class Author {
 
     @Column(name = "name", nullable = false)
     private final String name;
-
 }
