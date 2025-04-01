@@ -1,13 +1,11 @@
-package lt.restservice.app;
+package lt.restservice.app.controller;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 import lt.restservice.model.Greeting;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 // Tells Spring that this code describes an available endpoint
 @RestController
 @RequestMapping("greeting")

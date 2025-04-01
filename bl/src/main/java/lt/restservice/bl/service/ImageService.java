@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.Set;
 
 import lt.restservice.bl.model.CreateImageModel;
-import lt.restservice.bl.model.ImageSearch;
+import lt.restservice.bl.model.ImageSearchModel;
+import lt.restservice.bl.model.ImageUpdateModel;
 import lt.restservice.bl.model.ThumbnailListModel;
+import lt.restservice.bl.model.ImageViewModel;
+
 import lt.restservice.bl.utils.ThumbnailGenerator;
 import lt.restservice.bl.repository.ImageRepository;
 import lt.restservice.model.Author;
@@ -30,7 +33,7 @@ public class ImageService {
     private final TagService tagService;
     private final AuthorService authorService;
 
-    public void uploadImage(CreateImageModel createImageModel) throws IOException {
+    public void upload(CreateImageModel createImageModel) throws IOException {
         try {
             Set<Tag> tagSet = tagService.findOrCreateTags(createImageModel.getTagNames());
             Author author = authorService.findOrCreateAuthor(createImageModel.getAuthorName());
@@ -52,7 +55,40 @@ public class ImageService {
         }
     }
 
-    public Page<ThumbnailListModel> search(ImageSearch imageSearch) {
-        return imageRepository.search(imageSearch);
+    public Page<ThumbnailListModel> search(ImageSearchModel imageSearchModel) {
+        return imageRepository.search(imageSearchModel);
+    }
+
+    public ImageViewModel view(Long id) {
+        return imageRepository.view(id);
+    }
+
+    public ImageUpdateModel update(ImageUpdateModel imageUpdateModel) throws IOException {
+
+        Image image = imageRepository.findById(imageUpdateModel.getId()).orElse(null);
+
+        if (image != null) {
+            Set<Tag> tagSet = tagService.findOrCreateTags(imageUpdateModel.getTagNames());
+            Author author = authorService.findOrCreateAuthor(imageUpdateModel.getAuthorName());
+            image.setName(imageUpdateModel.getImageName())
+                    .setDescription(imageUpdateModel.getDescription())
+                    .setDate(imageUpdateModel.getDate())
+                    .setAuthor(author)
+                    .setTags(tagSet)
+                    .setUploadDate(imageUpdateModel.getUploadDate());
+
+            if (imageUpdateModel.getImageFile() != null) {
+                byte[] thumbnail = ThumbnailGenerator.createThumbnail(imageUpdateModel.getImageFile());
+                image.setImageBlob(imageUpdateModel.getImageFile())
+                        .setThumbnail(thumbnail);
+            }
+
+            return ImageUpdateModel.of(imageRepository.save(image));
+        }
+        throw new RuntimeException("Image with ID: " + imageUpdateModel.getId() + " not found");
+    }
+
+    public void delete(Long id) {
+        imageRepository.deleteById(id);
     }
 }

@@ -9,9 +9,6 @@ import javax.imageio.ImageIO;
 
 import org.imgscalr.Scalr;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class ThumbnailGenerator {
 
     public static byte[] createThumbnail(byte[] file) throws IOException {
