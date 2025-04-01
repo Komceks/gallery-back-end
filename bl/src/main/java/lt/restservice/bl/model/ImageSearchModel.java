@@ -10,11 +10,13 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class ImageSearch {
+public class ImageSearchModel {
     private final int pageNumber;
     private final int pageSize;
+    private final ImageSortModel sort;
+
     private final String query;
-    private final ImageSearchPart imageSearchPart;
+    private final ImageSearchPartModel imageSearchPartModel;
 
     public Pageable getPageable() {
         return PageRequest.of(pageNumber, pageSize);

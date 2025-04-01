@@ -3,21 +3,24 @@ package lt.restservice.bl.repository.custom;
 import jakarta.persistence.Tuple;
 import jakarta.persistence.criteria.Join;
 
-import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
-import jakarta.persistence.criteria.SetJoin;
 
-import lt.restservice.bl.model.ImageSearch;
+import lt.restservice.bl.model.ImageSearchModel;
 import lt.restservice.bl.model.ThumbnailListModel;
+import lt.restservice.bl.repository.TagRepository;
 import lt.restservice.bl.repository.specification.ImageSpecification;
-import lt.restservice.bl.model.ImageView;
+import lt.restservice.bl.model.ImageViewModel;
+import lt.restservice.bl.sort.SortEnum;
 import lt.restservice.model.Author;
 import lt.restservice.model.Author_;
 import lt.restservice.model.Image;
 import lt.restservice.model.Image_;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -34,25 +37,19 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 import lombok.RequiredArgsConstructor;
-import lt.restservice.model.Tag;
-import lt.restservice.model.Tag_;
 
 @Repository
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class CustomImageRepositoryImpl implements CustomImageRepository {
+class CustomImageRepositoryImpl implements CustomImageRepository {
 
     private final EntityManager em;
+    private final TagRepository tagRepository;
 
-    public Page<ThumbnailListModel> search(ImageSearch imageSearch) {
+    public Page<ThumbnailListModel> search(ImageSearchModel imageSearchModel) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<Image> image = cq.from(Image.class);
-
-        Specification<Image> searchSpecification = ImageSpecification.buildSpecification(imageSearch);
-        Predicate predicate = searchSpecification.toPredicate(image, cq, cb);
-        Long searchCount = countBySearch(searchSpecification);
-        cq.distinct(true).where(predicate);
 
         Join<Image, Author> authorJoin = image.join(Image_.author);
         Path<Long> idPath = image.get(Image_.id);
@@ -61,6 +58,7 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
         Path<LocalDate> datePath = image.get(Image_.date);
         Path<String> authorNamePath = authorJoin.get(Author_.name);
         Path<byte[]> thumbnailPath = image.get(Image_.thumbnail);
+        Path<LocalDateTime> uploadDatePath = image.get(Image_.uploadDate);
 
         cq.multiselect(
                 idPath,
@@ -68,24 +66,48 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
                 descriptionPath,
                 datePath,
                 authorNamePath,
-                thumbnailPath
+                thumbnailPath,
+                uploadDatePath
         );
 
-        Pageable pageable = imageSearch.getPageable();
+        Specification<Image> searchSpecification = ImageSpecification.buildSpecification(imageSearchModel);
+        Predicate predicate = searchSpecification.toPredicate(image, cq, cb);
+        Long searchCount = countBySearch(searchSpecification);
+
+        cq.distinct(true)
+                .where(predicate)
+                .orderBy(SortEnum.buildOrder(image, cb, imageSearchModel.getSort().getField(), imageSearchModel.getSort().getOrder()));
+
+        Pageable pageable = imageSearchModel.getPageable();
+
         List<Tuple> resultList = em.createQuery(cq)
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
 
+        List<Long> imageIds = resultList.stream()
+                .map(tuple -> tuple.get(idPath))
+                .toList();
+
+        Map<Long, Set<String>> imageTags = tagRepository.findByImageIds(imageIds);
+
         List<ThumbnailListModel> result = resultList.stream()
-                .map(tuple -> ThumbnailListModel.builder()
-                        .id(tuple.get(idPath))
-                        .imageName(tuple.get(namePath))
-                        .description(tuple.get(descriptionPath))
-                        .date(tuple.get(datePath))
-                        .authorName(tuple.get(authorNamePath))
-                        .thumbnail(tuple.get(thumbnailPath))
-                        .build())
+                .map(tuple -> {
+                    ThumbnailListModel.ThumbnailListModelBuilder builder = ThumbnailListModel.builder()
+                            .id(tuple.get(idPath))
+                            .imageName(tuple.get(namePath))
+                            .description(tuple.get(descriptionPath))
+                            .date(tuple.get(datePath))
+                            .authorName(tuple.get(authorNamePath))
+                            .thumbnail(tuple.get(thumbnailPath))
+                            .uploadDate(tuple.get(uploadDatePath));
+
+                    if (imageTags.containsKey(tuple.get(idPath))) {
+                        builder.tags(imageTags.get(tuple.get(idPath)));
+                    }
+
+                    return builder.build();
+                })
                 .collect(Collectors.toList());
 
         return new PageImpl<>(result, pageable, searchCount);
@@ -105,28 +127,25 @@ public class CustomImageRepositoryImpl implements CustomImageRepository {
         return em.createQuery(cq).getSingleResult();
     }
 
-    public ImageView viewImage(Long id) {
+    public ImageViewModel view(Long id) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
-        Root<Image> image = cq.from(Image.class);
-        SetJoin<Image, Tag> tagJoin = image.join(Image_.tags, JoinType.LEFT);
+        CriteriaQuery<Image> cq = cb.createQuery(Image.class);
+        Root<Image> imageRoot = cq.from(Image.class);
 
-        Path<byte[]> imageBlobPath = image.get(Image_.imageBlob);
-        Path<String> tagNamePath = tagJoin.get(Tag_.name);
+        Specification<Image> specification = ImageSpecification.buildSpecification(id);
+        Predicate predicate = specification.toPredicate(imageRoot, cq, cb);
 
-        cq.multiselect(
-                imageBlobPath,
-                tagNamePath
-        );
-        cq.where(cb.equal(image.get(Image_.id), id));
+        cq.select(imageRoot)
+                .distinct(true)
+                .where(predicate);
 
-        List<Tuple> tuple = em.createQuery(cq).getResultList();
+        Image image = em.createQuery(cq).getSingleResult();
+        Set<String> tagNames = tagRepository.findByImageId(id);
 
-        return ImageView.builder()
-                .image(tuple.getFirst().get(imageBlobPath))
-                .tags(tuple.stream()
-                        .map(tpl -> tpl.get(tagNamePath))
-                        .collect(Collectors.toSet()))
+        return ImageViewModel.builder()
+                .image(image.getImageBlob())
+                .tags(tagNames)
                 .build();
     }
+
 }

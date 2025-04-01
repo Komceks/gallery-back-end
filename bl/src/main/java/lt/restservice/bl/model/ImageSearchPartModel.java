@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class ImageSearchPart {
+public class ImageSearchPartModel {
     private final String imageName;
     private final String description;
     private final LocalDate dateFrom;

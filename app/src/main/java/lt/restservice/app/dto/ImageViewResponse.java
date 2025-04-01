@@ -5,7 +5,7 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lt.restservice.bl.model.ImageView;
+import lt.restservice.bl.model.ImageViewModel;
 
 @Data
 @AllArgsConstructor
@@ -14,10 +14,10 @@ public class ImageViewResponse {
     private final byte[] image;
     private final Set<String> tags;
 
-    public static ImageViewResponse of(ImageView imageView) {
+    public static ImageViewResponse of(ImageViewModel imageViewModel) {
         return ImageViewResponse.builder()
-                .image(imageView.getImage())
-                .tags(imageView.getTags())
+                .image(imageViewModel.getImage())
+                .tags(imageViewModel.getTags())
                 .build();
     }
 }

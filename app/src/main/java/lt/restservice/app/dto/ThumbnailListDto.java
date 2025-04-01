@@ -1,6 +1,8 @@
 package lt.restservice.app.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +19,8 @@ public class ThumbnailListDto {
     private final String authorName;
     private final LocalDate date;
     private final byte[] thumbnail;
+    private final LocalDateTime uploadDate;
+    private final Set<String> tags;
 
     public static ThumbnailListDto of(ThumbnailListModel thumbnailListModel) {
         return ThumbnailListDto.builder()
@@ -26,6 +30,7 @@ public class ThumbnailListDto {
                 .authorName(thumbnailListModel.getAuthorName())
                 .date(thumbnailListModel.getDate())
                 .thumbnail(thumbnailListModel.getThumbnail())
+                .tags(thumbnailListModel.getTags())
                 .build();
     }
 }

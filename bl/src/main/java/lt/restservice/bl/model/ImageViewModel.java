@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class ImageView {
+public class ImageViewModel {
     private final byte[] image;
     private final Set<String> tags;
 }

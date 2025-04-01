@@ -9,8 +9,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
-import lt.restservice.bl.model.ImageSearch;
-import lt.restservice.bl.model.ImageSearchPart;
+import lt.restservice.bl.model.ImageSearchModel;
+import lt.restservice.bl.model.ImageSearchPartModel;
 import lt.restservice.bl.utils.CriteriaQueryUtils;
 import lt.restservice.model.Author;
 import lt.restservice.model.Author_;
@@ -23,25 +23,31 @@ public class ImageSpecification {
     private static final String WHITESPACE_REGEX = "\\s+";
     private static final String DATE_REGEX = "^\\d{4}-\\d{2}-\\d{2}$";
 
-    public static Specification<Image> buildSpecification(ImageSearch imageSearch) {
-        if (imageSearch.getQuery() != null) {
-            if (StringUtils.isNotBlank(imageSearch.getQuery())) {
-                return ImageSpecification.buildSpecification(imageSearch.getQuery());
+    public static Specification<Image> buildSpecification(ImageSearchModel imageSearchModel) {
+        if (imageSearchModel.getQuery() != null) {
+            if (StringUtils.isNotBlank(imageSearchModel.getQuery())) {
+                return ImageSpecification.buildSpecification(imageSearchModel.getQuery());
             }
             return ImageSpecification.buildSpecification("");
         }
 
-        return ImageSpecification.buildSpecification(imageSearch.getImageSearchPart());
+        return ImageSpecification.buildSpecification(imageSearchModel.getImageSearchPartModel());
     }
 
-    private static Specification<Image> buildSpecification(ImageSearchPart imageSearchPart) {
+    public static Specification<Image> buildSpecification(Long id) {
         return ImageSpecBuilder.builder()
-                .name(imageSearchPart.getImageName())
-                .description(imageSearchPart.getDescription())
-                .author(imageSearchPart.getAuthorName())
-                .dateFrom(imageSearchPart.getDateFrom())
-                .dateTo(imageSearchPart.getDateTo())
-                .tagsIn(imageSearchPart.getTagNames())
+                .id(id)
+                .build();
+    }
+
+    private static Specification<Image> buildSpecification(ImageSearchPartModel imageSearchPartModel) {
+        return ImageSpecBuilder.builder()
+                .name(imageSearchPartModel.getImageName())
+                .description(imageSearchPartModel.getDescription())
+                .author(imageSearchPartModel.getAuthorName())
+                .dateFrom(imageSearchPartModel.getDateFrom())
+                .dateTo(imageSearchPartModel.getDateTo())
+                .tagsIn(imageSearchPartModel.getTagNames())
                 .build();
     }
 
@@ -77,7 +83,19 @@ public class ImageSpecification {
         }
 
         public Specification<Image> build() {
-            return this.specification == null ? (root, query, cb) -> cb.conjunction() : this.specification;
+            return this.specification == null ?
+                    (root, query, cb) -> cb.conjunction() : this.specification;
+        }
+
+        public ImageSpecBuilder id(Long id) {
+            if (id != null) {
+                this.specification = CriteriaQueryUtils.and(this.specification,
+                        (root, query, cb) ->
+                                cb.equal(root.get(Image_.id), id)
+                );
+            }
+
+            return this;
         }
 
         public ImageSpecBuilder name(String name) {
