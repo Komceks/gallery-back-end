@@ -16,12 +16,12 @@ Functionality to upload images along with metadata to a PostgreSQL DB.
 
 Gallery page with implemented simple searching functionality using JPA Criteria Queries and pagination.
 
+# Image Enchanced Gallery Module (MR4)
+
+Adds the ability to sort, view, edit, and delete images in the gallery.
+
 # API documentation
 
 Generated using Swagger API docs.
 
 Access: http://{host}:{port}/api/swagger-ui/index.html
-
-# Image Enchanced Gallery Module (MR4)
-
-Adds the ability to sort, view, edit, and delete images in the gallery.
